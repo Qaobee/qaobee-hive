@@ -90,7 +90,7 @@ db.User.insert({
         "timestamp" : 0,
         "token" : "f983ce61-1163-4d72-a943-d37ddd8ab4c7",
         "listPlan": [{
-            "paymentId": "paymentId001",
+            "paymentId": "",
             "levelPlan" : "FREEMIUM",
             "amountPaid" : 9,
             "paidDate" : 0,
@@ -1078,7 +1078,7 @@ db.User.insert({
         "habilitations": null,
 
         "listPlan": [{
-            "paymentId": "paymentId001",
+            "paymentId": "",
             "levelPlan" : "FREEMIUM",
             "amountPaid" : 9,
             "paidDate" : 0,

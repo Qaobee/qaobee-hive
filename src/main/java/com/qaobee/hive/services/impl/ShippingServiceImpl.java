@@ -156,6 +156,8 @@ public class ShippingServiceImpl implements ShippingService {
                 user.getAccount().getListPlan().get(planId).setPeriodicity(MONTHLY);
                 user.getAccount().getListPlan().get(planId).setCardId(customer.getId());
                 user.getAccount().getListPlan().get(planId).setStatus(subscription.getStatus());
+                user.getAccount().getListPlan().get(planId).setEndPeriodDate(-1L);
+                user.getAccount().setStatus(AccountStatus.ACTIVE);
                 JsonObject cardJson = new JsonObject(token.toJson()).getJsonObject("card");
                 Card card = new Card();
                 card.setBrand(cardJson.getString("brand"));
@@ -340,14 +342,15 @@ public class ShippingServiceImpl implements ShippingService {
                                 if (subscription.succeeded()) {
                                     if (subscription.result() != null) {
                                         Map<String, Object> params = new HashMap<>();
-                                        params.put("at_period_end", System.currentTimeMillis());
+                                        params.put("at_period_end", false);
                                         try {
                                             subscription.result().cancel(params);
+                                            user.getAccount().getListPlan().get(planId).setStatus("canceled");
                                             user.getAccount().setStatus(AccountStatus.NOT_PAID);
                                             JsonObject jUser = new JsonObject(Json.encode(user));
-                                            userService.updateUser(jUser, res-> {
+                                            mongo.upsert(jUser, DBCollections.USER, res-> {
                                                 if(res.succeeded()) {
-                                                    resultHandler.handle(Future.succeededFuture(res.result()));
+                                                    resultHandler.handle(Future.succeededFuture(jUser));
                                                 } else {
                                                     resultHandler.handle(Future.failedFuture(res.cause()));
                                                 }

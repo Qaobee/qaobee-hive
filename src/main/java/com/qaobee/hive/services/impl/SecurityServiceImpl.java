@@ -215,7 +215,7 @@ public class SecurityServiceImpl implements SecurityService {
             AccountStatus status = AccountStatus.ACTIVE;
             if (!"active".equals(plan.getString("status")) && plan.getLong("endPeriodDate", 0L) >= System.currentTimeMillis()) {
                 status = AccountStatus.NOT_PAID;
-            } else if (plan.getLong("endPeriodDate", 0L) < System.currentTimeMillis()) {
+            } else if (plan.getLong("endPeriodDate", 0L) >= 0 && plan.getLong("endPeriodDate", 0L) < System.currentTimeMillis()) {
                 status = AccountStatus.TRIAL_ENDED;
             }
             user.getJsonObject("account").put("status", status.name());
