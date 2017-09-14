@@ -530,6 +530,10 @@ public class UserSignupTest extends VertxJunitSupport {
         given().pathParam("id", p.getString("_id"))
                 .pathParam("code", p.getJsonObject("account").getString("activationCode"))
                 .when().get(BASE_URL + "/firstconnectioncheck/{id}/{code}")
+                .then().assertThat().statusCode(200);
+        given().pathParam("id", p.getString("_id"))
+                .pathParam("code", p.getJsonObject("account").getString("activationCode"))
+                .when().get(BASE_URL + "/firstconnectioncheck/{id}/{code}")
                 .then().assertThat().statusCode(ExceptionCodes.BUSINESS_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.BUSINESS_ERROR.toString()));
     }
