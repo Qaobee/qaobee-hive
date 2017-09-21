@@ -89,6 +89,15 @@
       "url": "https://qaobee.atlassian.net",
       "project": "QHBWEB",
       "userName": "feedback"
+    },
+    "warp10": {
+      "scheme": "http",
+      "host": "127.0.0.1",
+      "port": 8080,
+      "path": "/api/v0/",
+      "read": ".uzX46BaNUjvFUp6RuozKdMJNJ3s.wD9pbGZUfV5KtfXO2EJwWWfHUUYBCXanNMD3jrpn0Zpqk1_zxXHHG.4NUaYrvRpqM1RSK5DDyLMw6NXhNOFmbAzwjVJAQFrr5l1",
+      "write": "fLF.YDi0iFwn.lH9Vu0BraAbeX2HgH7WrfvpFYOkjHrxQOTW_STFl07fgLH52mBAmF2GJtVwdCrm6aYyp3eCZUIUTbmzjkns3pf_YIetMgk",
+      "app": "qaobee"
     }
   },
   "REC": {
