@@ -137,7 +137,7 @@ public class SignupServiceImpl implements SignupService {
         user.getAccount().setToken(VertxContextPRNG.current(vertx).nextString(32));
         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
         user.getAccount().setActive(false);
-        user.getAccount().setStatus(AccountStatus.NOT_VALIDATED);
+        user.getAccount().setStatus(AccountStatus.TRIAL);
         user.getAccount().setFirstConnexion(true);
         user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
         final Plan plan = Json.decodeValue(userJson.getJsonObject(PARAM_PLAN).encode(), Plan.class);
@@ -285,7 +285,7 @@ public class SignupServiceImpl implements SignupService {
                         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
                         // MaJ User
                         user.getAccount().setActive(true);
-                        user.getAccount().setFirstConnexion(false);
+                        
                         mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, userId -> {
                             if (userId.succeeded()) {
                                 vertx.eventBus().send(CRMVerticle.UPDATE, new JsonObject(Json.encode(user)));

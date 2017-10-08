@@ -262,6 +262,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         if (limit > 0) {
             pipelineAggregation.add(new JsonObject().put("$limit", limit));
         }
+        System.out.println("request : "+pipelineAggregation);
         mongo.aggregate(pipelineAggregation, DBCollections.STATS, resultHandler);
     }
 }

@@ -212,13 +212,12 @@ public class SecurityServiceImpl implements SecurityService {
     public void majUserAccountValidity(JsonObject user, Handler<AsyncResult<JsonObject>> resultHandler) {
         user.getJsonObject("account").getJsonArray("listPlan").forEach(p -> {
             JsonObject plan = (JsonObject) p;
-            AccountStatus status = AccountStatus.ACTIVE;
-            if (!"active".equals(plan.getString("status")) && plan.getLong("endPeriodDate", 0L) >= System.currentTimeMillis()) {
-                status = AccountStatus.NOT_PAID;
-            } else if (plan.getLong("endPeriodDate", 0L) >= 0 && plan.getLong("endPeriodDate", 0L) < System.currentTimeMillis()) {
-                status = AccountStatus.TRIAL_ENDED;
-            }
-            user.getJsonObject("account").put("status", status.name());
+            
+            if (plan.getLong("endPeriodDate", 0L) < System.currentTimeMillis()) {
+            	AccountStatus status = AccountStatus.NOT_PAID;
+            	user.getJsonObject("account").put("status", status.name());
+            } 
+            
             resultHandler.handle(Future.succeededFuture(user));
         });
     }
