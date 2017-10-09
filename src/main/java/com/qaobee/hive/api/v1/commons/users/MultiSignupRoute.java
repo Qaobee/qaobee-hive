@@ -19,20 +19,14 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.services.SignupService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
-import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.technical.tools.Messages;
-import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * The Class SignupVerticle.
@@ -40,19 +34,14 @@ import javax.inject.Named;
  * @author Xavier MARIN <ul>     <li>resthandler.register : Register a new accunt</li>     <li>resthandler.logintest : Login unicity testBodyParams for rest request</li>     <li>loginExists : Login unicity testBodyParams for internal use</li>     <li>resthandler.accountcheck : email validation number check</li> </ul>
  */
 @VertxRoute(rootPath = "/api/" + Module.V2 + "/commons/multi/signup")
-public class MultiSignupRoute extends AbstractRoute {
+public class MultiSignupRoute extends AbstractSignup {
     /**
      * Parameter ID
      */
     public static final String PARAM_ID = "id";
     private static final String PARAM_CAPTCHA = "captcha";
     @Inject
-    @Named("runtime")
-    private JsonObject runtime;
-    @Inject
     private SignupService signupService;
-    @Inject
-    private NotificationsService notificationsService;
 
     @Override
     public Router init() {
@@ -80,27 +69,7 @@ public class MultiSignupRoute extends AbstractRoute {
             if (u.succeeded()) {
                 JsonObject user = u.result().getJsonObject("person");
                 JsonObject structure = context.getBodyAsJson().getJsonObject("structure");
-                signupService.addStructureToSandbox(user.getString("sandboxDefault"), structure, res -> {
-                    if (res.succeeded()) {
-                        signupService.sendRegisterMail(user, getLocale(context), r -> {
-                            if (r.succeeded()) {
-                                JsonObject notification = new JsonObject()
-                                        .put("content", Messages.getString("notification.first.connection.content", getLocale(context), String.valueOf(runtime.getInteger("trial.duration"))))
-                                        .put("title", Messages.getString("notification.first.connection.title", getLocale(context)))
-                                        .put("senderId", runtime.getString("admin.id")
-                                        );
-                                notificationsService.sendNotification(user.getString("_id"), DBCollections.USER, notification, new JsonArray(), ar -> {
-                                    //empty
-                                });
-                                handleResponse(context, u.result());
-                            } else {
-                                utils.handleError(context, r.cause());
-                            }
-                        });
-                    } else {
-                        utils.handleError(context, res.cause());
-                    }
-                });
+                signupService.addStructureToSandbox(user.getString("sandboxDefault"), structure, res -> sendRegisterMail(u.result(), user, res, context));
             } else {
                 utils.handleError(context, u.cause());
             }

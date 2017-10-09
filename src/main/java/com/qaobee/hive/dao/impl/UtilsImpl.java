@@ -129,6 +129,7 @@ public class UtilsImpl implements Utils {
     }
 
     @Override
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     public void testMandatoryParams(Map<String, List<String>> map, String... fields) throws QaobeeException {
         final List<String> missingFields = new ArrayList<>();
         for (final String field : fields) {
@@ -142,6 +143,7 @@ public class UtilsImpl implements Utils {
     }
 
     @Override
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     public void testMandatoryParams(JsonObject payload, final String... fields) throws QaobeeException {
         JsonObject body = Optional.ofNullable(payload).orElse(new JsonObject());
         final List<String> missingFields = new ArrayList<>();

@@ -38,6 +38,7 @@ import java.util.Arrays;
 public final class PasswordEncryptionServiceImpl implements PasswordEncryptionService {
 
     @Override
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     public boolean authenticate(final String attemptedPassword, final byte[] encryptedPassword, final byte[] salt) throws QaobeeException {
         // Encrypt the clear-text password using the same salt that was used to
         // encrypt the original password
@@ -48,6 +49,7 @@ public final class PasswordEncryptionServiceImpl implements PasswordEncryptionSe
     }
 
     @Override
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     public byte[] getEncryptedPassword(final String password, final byte[] salt) throws QaobeeException {
         try {
             // PBKDF2 with SHA-1 as the hashing algorithm. Note that the NIST
@@ -71,6 +73,7 @@ public final class PasswordEncryptionServiceImpl implements PasswordEncryptionSe
     }
 
     @Override
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     public byte[] generateSalt() throws QaobeeException {
         try {
             // VERY important to use SecureRandom instead of just Random

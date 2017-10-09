@@ -62,24 +62,6 @@ public class Plan {
     }
 
     /**
-     * Gets payment url.
-     *
-     * @return the payment url
-     */
-    public String getPaymentURL() {
-        return paymentURL;
-    }
-
-    /**
-     * Sets payment url.
-     *
-     * @param paymentURL the payment url
-     */
-    public void setPaymentURL(String paymentURL) {
-        this.paymentURL = paymentURL;
-    }
-
-    /**
      * Gets card id.
      *
      * @return the card id

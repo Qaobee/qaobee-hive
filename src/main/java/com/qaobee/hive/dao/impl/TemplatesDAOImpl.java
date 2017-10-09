@@ -64,6 +64,7 @@ public class TemplatesDAOImpl implements TemplatesDAO {
     }
 
     @Override
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     public String generatePDF(JsonObject body) throws QaobeeException {
         if (!body.containsKey(DATA) || !body.containsKey(TEMPLATE)) {
             throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "wrong json format");
@@ -72,6 +73,7 @@ public class TemplatesDAOImpl implements TemplatesDAO {
     }
 
     @Override
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     public String generatePDF(JsonObject data, String template) throws QaobeeException {
         try {
             StringWriter out = new StringWriter();
@@ -85,6 +87,7 @@ public class TemplatesDAOImpl implements TemplatesDAO {
     }
 
     @Override
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     public JsonObject generateMail(JsonObject body) throws QaobeeException {
         if (!body.containsKey(DATA) || !body.containsKey(TEMPLATE)) {
             throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "wrong json format");
@@ -93,6 +96,7 @@ public class TemplatesDAOImpl implements TemplatesDAO {
     }
 
     @Override
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     public JsonObject generateMail(JsonObject data, String template) throws QaobeeException {
         try {
             final JsonObject res = new JsonObject();

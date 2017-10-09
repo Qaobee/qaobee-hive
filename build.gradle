@@ -1,5 +1,6 @@
 import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
+import se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask
 
 group 'com.qaobee'
 version '0.1'
@@ -66,20 +67,20 @@ dependencies {
     compile "io.vertx:vertx-web-client:$version"
     compile "io.vertx:vertx-dropwizard-metrics:$version"
     compile "io.vertx:vertx-auth-common:$version"
-    compile 'org.reflections:reflections:0.9.9'
+    compile 'org.reflections:reflections:0.9.11'
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'com.google.inject:guice:4.1.0'
     compile 'com.google.inject.extensions:guice-assistedinject:4.1.0'
     compile 'com.google.inject.extensions:guice-throwingproviders:4.1.0'
     compile 'org.apache.commons:commons-lang3:3.6'
     compile 'commons-io:commons-io:2.5'
-    compile 'org.apache.commons:commons-email:1.4'
+    compile 'org.apache.commons:commons-email:1.5'
     compile 'commons-codec:commons-codec:1.10'
     compile 'org.apache.commons:commons-exec:1.3'
     compile 'com.google.inject:guice:4.0'
     compile 'com.google.code.findbugs:jsr305:3.0.2'
-    compile 'org.xhtmlrenderer:flying-saucer-pdf:9.1.6'
-    compile 'com.google.api-client:google-api-client:1.22.0'
+    compile 'org.xhtmlrenderer:flying-saucer-pdf:9.1.7'
+    compile 'com.google.api-client:google-api-client:1.23.0'
     compile 'org.freemarker:freemarker:2.3.26-incubating'
     compile 'commons-beanutils:commons-beanutils:1.9.3'
     compile('net.rcarz:jira-client:0.5') {
@@ -91,15 +92,15 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.22'
     compile 'ch.qos.logback:logback-classic:1.2.3'
     compile 'ch.qos.logback:logback-core:1.2.3'
-    compile 'com.stripe:stripe-java:5.7.1'
+    compile 'com.stripe:stripe-java:5.21.0'
     compile 'org.imgscalr:imgscalr-lib:4.2'
 
 
     testCompile "io.vertx:vertx-unit:$version"
     testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.0.0'
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mock-server:mockserver-netty:3.10.8'
-    testCompile 'io.rest-assured:rest-assured:3.0.3'
+    testCompile 'org.mock-server:mockserver-netty:3.11'
+    testCompile 'io.rest-assured:rest-assured:3.0.5'
     testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.50.5'
 }
 
@@ -154,7 +155,7 @@ jacocoTestReport {
     reports {
         xml.enabled true
         csv.enabled false
-        html.destination "${buildDir}/reports/jacoco"
+        html.destination file("${buildDir}/reports/jacoco")
     }
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
@@ -185,7 +186,7 @@ sonarqube {
     }
 }
 
-def getVersion(inc) {
+def getGitVersion(inc) {
     def stdout = new ByteArrayOutputStream()
     exec {
         commandLine 'git', 'describe', '--abbrev=0', '--tags'
@@ -201,10 +202,10 @@ def getVersion(inc) {
     return version
 }
 
-task gitChangelogTask(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
+task gitChangelogTask(type: GitChangelogTask) {
     filePath = "build/docs/changelog/index.html"
     templateContent = new File('changelog.mustache').getText('UTF-8')
-    fromRef = getVersion(-5)
+    fromRef = getGitVersion(-5)
 }
 
 task updateRancherImage {
@@ -214,9 +215,8 @@ task updateRancherImage {
         def creds = "854D77F36BD20C5D89FE:p8ktQVdpEdGp4rwfJCfFoq5abCL2eYTXSHwee3ot"
         def p = ['curl', '-u', creds, '-H', "'Accept: application/json'", '-H', "'Content-Type: application/json'", url].execute()
         def json = new JsonSlurper().parseText(p.text).upgrade
-        def imageUid = json.inServiceStrategy.launchConfig.imageUuid.split(':')
-        println "upgrading  ${imageUid[1]} from ${imageUid[2]} to ${dockerVersion}"
-        imageUid[2] = dockerVersion
+        def (imageGroup, imageUid, imageVersion) = json.inServiceStrategy.launchConfig.imageUuid.tokenize(':')
+        println "upgrading  ${imageUid} from ${imageVersion} to ${dockerVersion}"
         json.inServiceStrategy.launchConfig.imageUuid = imageUid.join(':')
 
         def req = new JsonSlurper().parseText('{"inServiceStrategy": {}}')

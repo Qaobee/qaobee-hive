@@ -51,7 +51,7 @@ public class Main {
             config.getJsonObject(MONGO_CONF_KEY).put("password", Optional.ofNullable(System.getenv("OPENSHIFT_MONGODB_DB_PASSWORD")).orElse(""));
             config.getJsonObject(MONGO_CONF_KEY).put("username", Optional.ofNullable(System.getenv("OPENSHIFT_MONGODB_DB_USERNAME")).orElse(""));
         }
-        LOG.debug(config.encodePrettily());
+        LOG.debug("Config : {}", config.encodePrettily());
         vertx.deployVerticle(CoordinatorVerticle.class.getName(), new DeploymentOptions().setConfig(config));
   }
 }

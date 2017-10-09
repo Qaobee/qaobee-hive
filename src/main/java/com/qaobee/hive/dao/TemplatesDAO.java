@@ -33,6 +33,7 @@ public interface TemplatesDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     String generatePDF(JsonObject body) throws QaobeeException;
 
     /**
@@ -43,6 +44,7 @@ public interface TemplatesDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     String generatePDF(JsonObject data, String template) throws QaobeeException;
 
     /**
@@ -52,6 +54,7 @@ public interface TemplatesDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     JsonObject generateMail(JsonObject body) throws QaobeeException;
 
     /**
@@ -62,5 +65,6 @@ public interface TemplatesDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     JsonObject generateMail(JsonObject data, String template) throws QaobeeException;
 }

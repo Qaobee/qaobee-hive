@@ -106,6 +106,7 @@ public interface Utils {
      *
      * @throws QaobeeException explain missing fields
      */
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     void testMandatoryParams(Map<String, List<String>> map, String... fields) throws QaobeeException;
 
     /**
@@ -116,6 +117,7 @@ public interface Utils {
      *
      * @throws QaobeeException explain missing fields
      */
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     void testMandatoryParams(JsonObject json, String... fields) throws QaobeeException;
 
     /**
@@ -126,6 +128,7 @@ public interface Utils {
      *
      * @throws QaobeeException the qaobee exception
      */
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     void testMandatoryParams(RoutingContext context, String... fields) throws QaobeeException;
 
     /**
@@ -137,6 +140,7 @@ public interface Utils {
      *
      * @throws QaobeeException the qaobee exception
      */
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     void testMandatoryParams(MultiMap params, RoutingContext context, String... fields) throws QaobeeException;
 
     /**

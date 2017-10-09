@@ -37,6 +37,7 @@ public interface PasswordEncryptionService {
      *
      * @throws QaobeeException the qaobee exception
      */
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     boolean authenticate(String attemptedPassword, byte[] encryptedPassword, byte[] salt) throws QaobeeException;
 
     /**
@@ -49,6 +50,7 @@ public interface PasswordEncryptionService {
      *
      * @throws QaobeeException the qaobee exception
      */
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     byte[] getEncryptedPassword(String password, byte[] salt) throws QaobeeException;
 
     /**
@@ -58,5 +60,6 @@ public interface PasswordEncryptionService {
      *
      * @throws QaobeeException the qaobee exception
      */
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     byte[] generateSalt() throws QaobeeException;
 }

@@ -89,6 +89,7 @@ public class UserServiceImpl implements UserService {
         super();
     }
 
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     private static void checkUserLogin(String login, String locale) throws QaobeeException {
         if (StringUtils.isBlank(login)) {
             throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.login.required", locale));
@@ -99,6 +100,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     private static void checkUserFirstname(String firstname, String locale) throws QaobeeException {
         if (StringUtils.isBlank(firstname)) {
             throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.firstname.required", locale));
@@ -109,6 +111,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
     private static void checkUserName(String name, String locale) throws QaobeeException {
         if (StringUtils.isBlank(name)) {
             throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.name.required", locale));
