@@ -60,6 +60,7 @@ public class SecurityServiceImpl implements SecurityService {
     private static final Logger LOG = LoggerFactory.getLogger(SecurityServiceImpl.class);
     private static final String ACCOUNT_LOGIN_FIELD = "account.login";
     private static final String BAD_LOGIN_MESS = "bad.login";
+    private static final String STATUS_FIELD = "status";
 
     @Inject
     private MongoDB mongo;
@@ -212,12 +213,12 @@ public class SecurityServiceImpl implements SecurityService {
     public void majUserAccountValidity(JsonObject user, Handler<AsyncResult<JsonObject>> resultHandler) {
         user.getJsonObject("account").getJsonArray("listPlan").forEach(p -> {
             JsonObject plan = (JsonObject) p;
-            
+
             if (plan.getLong("endPeriodDate", 0L) < System.currentTimeMillis()) {
-            	AccountStatus status = AccountStatus.NOT_PAID;
-            	user.getJsonObject("account").put("status", status.name());
-            } 
-            
+                AccountStatus status = AccountStatus.NOT_PAID;
+                user.getJsonObject("account").put(STATUS_FIELD, status.name());
+            }
+
             resultHandler.handle(Future.succeededFuture(user));
         });
     }
@@ -244,10 +245,10 @@ public class SecurityServiceImpl implements SecurityService {
                 User user = Json.decodeValue(ar.result().encode(), User.class);
                 if (code.equals(user.getAccount().getActivationPasswd())) {
                     resultHandler.handle(Future.succeededFuture(new JsonObject()
-                            .put("status", true)
+                            .put(STATUS_FIELD, true)
                             .put("user", ar.result())));
                 } else {
-                    resultHandler.handle(Future.succeededFuture(new JsonObject().put("status", false)));
+                    resultHandler.handle(Future.succeededFuture(new JsonObject().put(STATUS_FIELD, false)));
                 }
             } else {
                 resultHandler.handle(Future.failedFuture(ar.cause()));

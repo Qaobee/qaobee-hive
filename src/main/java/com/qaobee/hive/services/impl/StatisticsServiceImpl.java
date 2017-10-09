@@ -27,6 +27,8 @@ import com.qaobee.hive.technical.mongo.CriteriaOption;
 import io.vertx.core.*;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -38,6 +40,8 @@ import java.util.List;
  */
 @ProxyService(address = "vertx.Statistics.service", iface = StatisticsService.class)
 public class StatisticsServiceImpl implements StatisticsService {
+    private static final Logger LOG = LoggerFactory.getLogger(StatisticsServiceImpl.class);
+
     private static final String TIMER_FIELD = "timer";
     private static final String OWNER_FIELD = "owner";
     private static final String CODE_FIELD = "code";
@@ -262,7 +266,9 @@ public class StatisticsServiceImpl implements StatisticsService {
         if (limit > 0) {
             pipelineAggregation.add(new JsonObject().put("$limit", limit));
         }
-        System.out.println("request : "+pipelineAggregation);
+        if(LOG.isDebugEnabled()) {
+            LOG.debug("request : {} ", pipelineAggregation);
+        }
         mongo.aggregate(pipelineAggregation, DBCollections.STATS, resultHandler);
     }
 }

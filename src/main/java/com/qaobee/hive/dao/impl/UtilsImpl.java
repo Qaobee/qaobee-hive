@@ -180,7 +180,9 @@ public class UtilsImpl implements Utils {
         } else {
             e = new QaobeeException(ExceptionCodes.INTERNAL_ERROR, t.getMessage());
         }
-        LOG.error(String.format("[ %s : %d ] %s", e.getCode().name(), e.getCode().getCode(), e.getMessage()), e);
+        if (LOG.isErrorEnabled()) {
+            LOG.error("[ {} : {} ] {}", e.getCode().name(), e.getCode().getCode(), e.getMessage());
+        }
         context.response().putHeader(HTTP.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON)
                 .setStatusCode(e.getCode().getCode())
                 .end(new JsonObject()

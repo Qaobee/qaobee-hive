@@ -146,7 +146,7 @@ public class SignupServiceImpl implements SignupService {
         }
         plan.setStatus("open");
         plan.setStartPeriodDate(System.currentTimeMillis());
-        plan.setAmountPaid(runtime.getJsonObject("plan").getJsonObject(plan.getLevelPlan().name()).getInteger("price"));
+        plan.setAmountPaid(runtime.getJsonObject(PARAM_PLAN).getJsonObject(plan.getLevelPlan().name()).getInteger("price"));
         Calendar gc = GregorianCalendar.getInstance();
         gc.add(Calendar.MONTH, runtime.getInteger("trial.duration"));
         plan.setEndPeriodDate(gc.getTimeInMillis());

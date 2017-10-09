@@ -180,6 +180,7 @@ public class SB_StatsTest extends VertxJunitSupport {
      * @param context the context
      */
     @Test
+    @SuppressWarnings("squid:S3415")
     public void getStatGroupByWithSomeParams(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_STAT_HAND, DATA_USER_QAOBEE);

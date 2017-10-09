@@ -39,7 +39,6 @@ import java.util.List;
  */
 public class AbstractGuiceVerticle extends AbstractVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractGuiceVerticle.class);
-    private static final String MONGO_CONF_KEY = "mongo.db";
     /**
      * The Utils.
      */
