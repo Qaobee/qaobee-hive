@@ -52,6 +52,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -272,6 +274,11 @@ public class ShippingServiceImpl implements ShippingService {
         } else {
             user.getJsonObject(ACCOUNT_FIELD).getJsonArray(LIST_PLAN_FIELD).getJsonObject(planId)
                     .put(Constants.STATUS, subscription.getString("status"));
+            // TODO : modify here for the yearly subscription
+            Calendar gc = GregorianCalendar.getInstance();
+            gc.add(Calendar.MONTH, 1);
+            user.getJsonObject(ACCOUNT_FIELD).getJsonArray(LIST_PLAN_FIELD).getJsonObject(planId)
+                    .put("endPeriodDate", gc.getTimeInMillis());
             mongo.upsert(user, DBCollections.USER, upsertRes -> {
                 if (upsertRes.succeeded()) {
                     try {
@@ -348,8 +355,8 @@ public class ShippingServiceImpl implements ShippingService {
                                             user.getAccount().getListPlan().get(planId).setStatus("canceled");
                                             user.getAccount().setStatus(AccountStatus.NOT_PAID);
                                             JsonObject jUser = new JsonObject(Json.encode(user));
-                                            mongo.upsert(jUser, DBCollections.USER, res-> {
-                                                if(res.succeeded()) {
+                                            mongo.upsert(jUser, DBCollections.USER, res -> {
+                                                if (res.succeeded()) {
                                                     resultHandler.handle(Future.succeededFuture(jUser));
                                                 } else {
                                                     resultHandler.handle(Future.failedFuture(res.cause()));
