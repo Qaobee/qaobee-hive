@@ -69,7 +69,7 @@ public class MultiSignupRoute extends AbstractSignup {
             if (u.succeeded()) {
                 JsonObject user = u.result().getJsonObject("person");
                 JsonObject structure = context.getBodyAsJson().getJsonObject("structure");
-                signupService.addStructureToSandbox(user.getString("sandboxDefault"), structure, res -> sendRegisterMail(u.result(), user, res, context));
+                signupService.addStructureToSandbox(user.getString("sandboxDefault"), structure, res -> signupService.sendRegisterMail(user, getLocale(context), r -> sendRegisterMail(u.result(), user, res, context)));
             } else {
                 utils.handleError(context, u.cause());
             }
