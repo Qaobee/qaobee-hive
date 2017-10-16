@@ -67,7 +67,7 @@ dependencies {
     compile "io.vertx:vertx-web-client:$version"
     compile "io.vertx:vertx-dropwizard-metrics:$version"
     compile "io.vertx:vertx-auth-common:$version"
-    compile 'org.reflections:reflections:0.9.11'
+    compile 'org.reflections:reflections:0.9.9'
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'com.google.inject:guice:4.1.0'
     compile 'com.google.inject.extensions:guice-assistedinject:4.1.0'
