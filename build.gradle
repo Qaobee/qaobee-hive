@@ -211,7 +211,7 @@ task gitChangelogTask(type: GitChangelogTask) {
 task updateRancherImage {
     def dockerVersion = findProperty("dockerVersion")
     if (dockerVersion != null) {
-        def url = "http://vps234741.ovh.net:8080/v2-beta/projects/1a7/services/1st4/"
+        def url = "http://vps234741.ovh.net:8080/v2-beta/projects/1a7/services/1s22/"
         def creds = "854D77F36BD20C5D89FE:p8ktQVdpEdGp4rwfJCfFoq5abCL2eYTXSHwee3ot"
         def p = ['curl', '-u', creds, '-H', "'Accept: application/json'", '-H', "'Content-Type: application/json'", url].execute()
         def json = new JsonSlurper().parseText(p.text).upgrade
