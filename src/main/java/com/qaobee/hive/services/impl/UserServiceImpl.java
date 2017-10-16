@@ -162,8 +162,6 @@ public class UserServiceImpl implements UserService {
                         user.getAccount().setPassword(passwordEncryptionService.getEncryptedPassword(user.getAccount().getPasswd(), salt));
                         user.getAccount().setPasswd(null);
                         u.put(ACCOUNT_FIELD, new JsonObject(Json.encode(user.getAccount())));
-                    } else {
-                        u.put(ACCOUNT_FIELD, p.result().getJsonObject(ACCOUNT_FIELD));
                     }
                     mongo.upsert(u, DBCollections.USER, res -> {
                         if (res.succeeded()) {
