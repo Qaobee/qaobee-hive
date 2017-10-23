@@ -31,7 +31,7 @@ apply plugin: "se.bjurr.gitchangelog.git-changelog-gradle-plugin"
 
 def generateSrcPath = "$buildDir/generated-src"
 def generatedSrcDir = file("$buildDir/generated-src")
-def version = '3.4.2'
+def version = '3.5.0'
 mainClassName = 'com.qaobee.hive.Main'
 repositories {
     jcenter()

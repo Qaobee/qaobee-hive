@@ -1,7 +1,6 @@
 package com.qaobee.hive.technical.vertx;
 
 import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.dao.Utils;
 import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
@@ -9,6 +8,9 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.MongoClientCustom;
 import io.netty.handler.codec.http.HttpHeaderValues;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -22,8 +24,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class QaobeeAuthHandler implements AuthHandler {
-    @Inject
-    private Utils utils;
     @Inject
     private MongoClientCustom mongoClient;
     @Inject
@@ -103,6 +103,36 @@ public class QaobeeAuthHandler implements AuthHandler {
     public AuthHandler addAuthorities(Set<String> authorities) {
         this.authorities.addAll(authorities);
         return this;
+    }
+
+    @Override
+    public void parseCredentials(RoutingContext context, Handler<AsyncResult<JsonObject>> handler) {
+        String token = getToken(context.request());
+        String locale = context.request().getHeader("Accept-Language");
+        handler.handle(Future.succeededFuture(new JsonObject().put("token", token).put("locale", locale)));
+    }
+
+    @Override
+    public void authorize(io.vertx.ext.auth.User u, Handler<AsyncResult<Void>> handler) {
+        JsonObject jsonUser = u.principal();
+        final User user = Json.decodeValue(jsonUser.encode(), User.class);
+        if (Constants.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
+            jsonUser.getJsonObject(ACCOUNT_FIELD).put("token", "");
+            jsonUser.getJsonObject(ACCOUNT_FIELD).put("tokenRenewDate", 0L);
+        } else {
+            jsonUser.getJsonObject(ACCOUNT_FIELD).put("tokenRenewDate", System.currentTimeMillis());
+        }
+        mongo.upsert(jsonUser, DBCollections.USER, upsertRes -> {
+            if(upsertRes.succeeded()) {
+                if (user.getAccount().getTokenRenewDate() == 0) {
+                    handler.handle(Future.failedFuture("401"));
+                } else {
+                    handler.handle(Future.succeededFuture());
+                }
+            } else {
+                handler.handle(Future.failedFuture("401"));
+            }
+        });
     }
 
     private static String getToken(HttpServerRequest request) {
