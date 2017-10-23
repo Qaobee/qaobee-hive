@@ -149,4 +149,17 @@ public final class MailUtilsImpl implements MailUtils {
                 .put(ASSISTANT_FIELD, Messages.getString(ASSISTANT_KEY, locale));
         return json;
     }
+
+    @Override
+    public JsonObject generatePaymentCanceledBody(User user, String locale, Plan planItem) {
+        return new JsonObject()
+                .put(TITLE_FIELD, Messages.getString("mail.payment.canceled.title", locale))
+                .put("desc", Messages.getString("mail.payment.canceled.line.1", locale, user.getFirstname() + " " + user.getName(), planItem.getLevelPlan().name()))
+                .put(HEADER_FIELD, Messages.getString("mail.payment.canceled.title", locale))
+                .put(SUB_HEADER_FIELD, "")
+                .put(MESSAGE_FIELD, "")
+                .put("sig", Messages.getString(SIG_KEY, locale, runtime.getString(SITE_URL_KEY)))
+                .put(ASSISTANT_FIELD, Messages.getString(ASSISTANT_KEY, locale))
+                .put(SOCIAL_LINKS_FIELD, Messages.getString(SOCIAL_LINKS_KEY, locale));
+    }
 }

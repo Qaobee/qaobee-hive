@@ -282,20 +282,38 @@ public class ShippingServiceImpl implements ShippingService {
             mongo.upsert(user, DBCollections.USER, upsertRes -> {
                 if (upsertRes.succeeded()) {
                     try {
+
                         final JsonObject tplReq = new JsonObject()
-                                .put(TemplatesDAOImpl.TEMPLATE, "payment.html")
-                                .put(TemplatesDAOImpl.DATA, mailUtils.generatePaymentBody(u,
+                                .put(TemplatesDAOImpl.TEMPLATE, "payment.html");
+                        if("active".equals(subscription.getString("status"))) {
+
+                            tplReq .put(TemplatesDAOImpl.DATA, mailUtils.generatePaymentBody(u,
                                         subscription.getJsonObject(METADATA_FIELD).getString(LOCALE_FIELD),
                                         u.getAccount().getListPlan().get(planId)));
-                        final String tplRes = templatesDAO.generateMail(tplReq).getString("result");
-                        final JsonObject emailReq = new JsonObject()
-                                .put("from", runtime.getString("mail.from"))
-                                .put("to", u.getContact().getEmail())
-                                .put("subject", Messages.getString("mail.payment.subject",
-                                        subscription.getJsonObject(METADATA_FIELD).getString(LOCALE_FIELD)))
-                                .put("content_type", "text/html")
-                                .put("body", tplRes);
-                        vertx.eventBus().publish(MailVerticle.INTERNAL_MAIL, emailReq);
+                            final String tplRes = templatesDAO.generateMail(tplReq).getString("result");
+                            final JsonObject emailReq = new JsonObject()
+                                    .put("from", runtime.getString("mail.from"))
+                                    .put("to", u.getContact().getEmail())
+                                    .put("subject", Messages.getString("mail.payment.subject",
+                                            subscription.getJsonObject(METADATA_FIELD).getString(LOCALE_FIELD)))
+                                    .put("content_type", "text/html")
+                                    .put("body", tplRes);
+                            vertx.eventBus().publish(MailVerticle.INTERNAL_MAIL, emailReq);
+                        }
+                        if("canceled".equals(subscription.getString("status"))) {
+                            tplReq.put(TemplatesDAOImpl.DATA, mailUtils.generatePaymentCanceledBody(u,
+                                        subscription.getJsonObject(METADATA_FIELD).getString(LOCALE_FIELD),
+                                        u.getAccount().getListPlan().get(planId)));
+                            final String tplRes = templatesDAO.generateMail(tplReq).getString("result");
+                            final JsonObject emailReq = new JsonObject()
+                                    .put("from", runtime.getString("mail.from"))
+                                    .put("to", u.getContact().getEmail())
+                                    .put("subject", Messages.getString("mail.payment.canceled.subject",
+                                            subscription.getJsonObject(METADATA_FIELD).getString(LOCALE_FIELD)))
+                                    .put("content_type", "text/html")
+                                    .put("body", tplRes);
+                            vertx.eventBus().publish(MailVerticle.INTERNAL_MAIL, emailReq);
+                        }
                         resultHandler.handle(Future.succeededFuture(true));
                     } catch (QaobeeException e) {
                         LOG.error(e.getMessage(), e);

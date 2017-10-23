@@ -79,12 +79,22 @@ public interface MailUtils {
     /**
      * Generate activation body.
      *
-     * @param user   the person
-     * @param locale the locale language
-     * @param emailTarget the guest's e-mail
+     * @param user         the person
+     * @param locale       the locale language
+     * @param emailTarget  the guest's e-mail
      * @param invitationId the invitation id
-     * @param target indicate internal or external link 
+     * @param target       indicate internal or external link
      * @return the json object
      */
     JsonObject generateInvitationToSandboxBody(User user, String locale, String emailTarget, String invitationId, String target);
+
+    /**
+     * Generate payment canceled body json object.
+     *
+     * @param user   the user
+     * @param locale the locale
+     * @param plan   the plan
+     * @return the json object
+     */
+    JsonObject generatePaymentCanceledBody(User user, String locale, Plan plan);
 }
