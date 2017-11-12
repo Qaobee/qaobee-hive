@@ -24,7 +24,7 @@ import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.AccountStatus;
 import com.qaobee.hive.business.model.commons.users.account.Device;
 import com.qaobee.hive.dao.MailUtils;
-import com.qaobee.hive.dao.PasswordEncryptionService;
+import com.qaobee.hive.dao.EncryptionService;
 import com.qaobee.hive.dao.ReCaptcha;
 import com.qaobee.hive.dao.TemplatesDAO;
 import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
@@ -71,7 +71,7 @@ public class SecurityServiceImpl implements SecurityService {
     @Inject
     private TemplatesDAO templatesDAO;
     @Inject
-    private PasswordEncryptionService passwordEncryptionService;
+    private EncryptionService encryptionService;
     @Inject
     private ReCaptcha reCaptcha;
     @Inject
@@ -124,7 +124,7 @@ public class SecurityServiceImpl implements SecurityService {
             if (ar.succeeded()) {
                 try {
                     User user = Json.decodeValue(ar.result().encode(), User.class);
-                    byte[] encryptedAttemptedPassword = passwordEncryptionService.getEncryptedPassword(password, user.getAccount().getSalt());
+                    byte[] encryptedAttemptedPassword = encryptionService.getEncrypted(password, user.getAccount().getSalt());
                     if (!Base64.encodeBytes(encryptedAttemptedPassword).equals(Base64.encodeBytes(user.getAccount().getPassword()))) {
                         resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, locale))));
                     }

@@ -24,40 +24,35 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 /**
  * The interface Password encryption service.
  */
-public interface PasswordEncryptionService {
+public interface EncryptionService {
 
     /**
      * Authenticate boolean.
      *
-     * @param attemptedPassword the attempted password
-     * @param encryptedPassword the encrypted password
+     * @param attemptedMessage the attempted password
+     * @param encryptedMessage the encrypted password
      * @param salt              the salt
-     *
      * @return the boolean
-     *
      * @throws QaobeeException the qaobee exception
      */
     @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
-    boolean authenticate(String attemptedPassword, byte[] encryptedPassword, byte[] salt) throws QaobeeException;
+    boolean authenticate(String attemptedMessage, byte[] encryptedMessage, byte[] salt) throws QaobeeException;
 
     /**
-     * Gets the encrypted password.
+     * Gets the encrypted.
      *
-     * @param password the password
+     * @param message the message
      * @param salt     the salt
-     *
-     * @return the encrypted password
-     *
+     * @return the encrypted message
      * @throws QaobeeException the qaobee exception
      */
     @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
-    byte[] getEncryptedPassword(String password, byte[] salt) throws QaobeeException;
+    byte[] getEncrypted(String message, byte[] salt) throws QaobeeException;
 
     /**
      * Generate salt.
      *
      * @return the byte[]
-     *
      * @throws QaobeeException the qaobee exception
      */
     @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")

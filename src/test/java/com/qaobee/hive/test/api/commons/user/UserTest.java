@@ -26,6 +26,7 @@ import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
+import org.apache.commons.codec.binary.Base64;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -1286,5 +1287,115 @@ public class UserTest extends VertxJunitSupport {
             async.complete();
         });
         async.await(TIMEOUT);
+    }
+
+    /**
+     * Sso test.
+     *
+     * @param context the context
+     */
+    @Test
+    public void ssoTest(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().setHandler(u -> {
+            String secret = given().header(TOKEN, u.result().getAccount().getToken())
+                    .when().get(BASE_URL + "/encrypt")
+                    .then().assertThat().statusCode(200)
+                    .body("secret", notNullValue())
+                    .extract().path("secret");
+            given().body(new JsonObject().put("_id", u.result().get_id()).put("secret",
+                    Base64.encodeBase64String(new JsonObject()
+                            .put("token", secret)
+                            .put("path", "/private/sso/area")
+                            .encode().getBytes()
+                    )).encode())
+                    .when().post(BASE_URL + "/decrypt")
+                    .then().assertThat().statusCode(200)
+                    .body("token", notNullValue())
+                    .body("token", is(u.result().getAccount().getToken()))
+                    .body("path", notNullValue())
+                    .body("path", is("/private/sso/area"));
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
+    /**
+     * Sso test missing datas.
+     *
+     * @param context the context
+     */
+    @Test
+    public void ssoTestMissingDatas(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().setHandler(u -> {
+            String secret = given().header(TOKEN, u.result().getAccount().getToken())
+                    .when().get(BASE_URL + "/encrypt")
+                    .then().assertThat().statusCode(200)
+                    .body("secret", notNullValue())
+                    .extract().path("secret");
+            given().body(new JsonObject().put("secret", secret).encode())
+                    .when().post(BASE_URL + "/decrypt")
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            given().body(new JsonObject().put("_id", u.result().get_id()).encode())
+                    .when().post(BASE_URL + "/decrypt")
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
+    /**
+     * Sso test wrong secret.
+     *
+     * @param context the context
+     */
+    @Test
+    public void ssoTestWrongSecret(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().setHandler(u -> {
+            given().body(new JsonObject().put("_id", u.result().get_id()).put("secret", Base64.encodeBase64String(new JsonObject()
+                    .put("token", "123456")
+                    .put("path", "/private/sso/area")
+                    .encode().getBytes()
+            )).encode())
+                    .when().post(BASE_URL + "/decrypt")
+                    .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
+                    .body(CODE, is(ExceptionCodes.BAD_LOGIN.toString()));
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
+    @Test
+    public void ssoTestWrongData(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().setHandler(u -> {
+            given().body(new JsonObject().put("_id", u.result().get_id()).put("secret", "123456").encode())
+                    .when().post(BASE_URL + "/decrypt")
+                    .then().assertThat().statusCode(ExceptionCodes.INTERNAL_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.INTERNAL_ERROR.toString()));
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
+    /**
+     * Sso test wrong user.
+     *
+     * @param context the context
+     */
+    @Test
+    public void ssoTestWrongUser(TestContext context) {
+        given().body(new JsonObject().put("_id", "123456").put("secret", Base64.encodeBase64String(new JsonObject()
+                .put("token", "123456")
+                .put("path", "/private/sso/area")
+                .encode().getBytes()
+        )).encode())
+                .when().post(BASE_URL + "/decrypt")
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
 }

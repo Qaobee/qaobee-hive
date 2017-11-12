@@ -18,7 +18,7 @@
  */
 package com.qaobee.hive.dao.impl;
 
-import com.qaobee.hive.dao.PasswordEncryptionService;
+import com.qaobee.hive.dao.EncryptionService;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 
@@ -35,22 +35,22 @@ import java.util.Arrays;
  *
  * @author xavier
  */
-public final class PasswordEncryptionServiceImpl implements PasswordEncryptionService {
+public final class EncryptionServiceImpl implements EncryptionService {
 
     @Override
     @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
-    public boolean authenticate(final String attemptedPassword, final byte[] encryptedPassword, final byte[] salt) throws QaobeeException {
+    public boolean authenticate(final String attemptedMessage, final byte[] encryptedMessage, final byte[] salt) throws QaobeeException {
         // Encrypt the clear-text password using the same salt that was used to
         // encrypt the original password
-        final byte[] encryptedAttemptedPassword = getEncryptedPassword(attemptedPassword, salt);
+        final byte[] encryptedAttemptedPassword = getEncrypted(attemptedMessage, salt);
         // Authentication succeeds if encrypted password that the user entered
         // is equal to the stored hash
-        return Arrays.equals(encryptedPassword, encryptedAttemptedPassword);
+        return Arrays.equals(encryptedMessage, encryptedAttemptedPassword);
     }
 
     @Override
     @SuppressWarnings("squid:RedundantThrowsDeclarationCheck")
-    public byte[] getEncryptedPassword(final String password, final byte[] salt) throws QaobeeException {
+    public byte[] getEncrypted(final String message, final byte[] salt) throws QaobeeException {
         try {
             // PBKDF2 with SHA-1 as the hashing algorithm. Note that the NIST
             // specifically names SHA-1 as an acceptable hashing algorithm for
@@ -64,7 +64,7 @@ public final class PasswordEncryptionServiceImpl implements PasswordEncryptionSe
             // iOS 4.x reportedly uses 10,000:
             // http://blog.crackpassword.com/2010/09/smartphone-forensics-cracking-blackberry-backup-passwords/
             final int iterations = 20000;
-            final KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, derivedKeyLength);
+            final KeySpec spec = new PBEKeySpec(message.toCharArray(), salt, iterations, derivedKeyLength);
             final SecretKeyFactory f = SecretKeyFactory.getInstance(algorithm);
             return f.generateSecret(spec).getEncoded();
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {

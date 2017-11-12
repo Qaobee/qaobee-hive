@@ -19,6 +19,7 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
+import com.qaobee.hive.dao.EncryptionService;
 import com.qaobee.hive.services.SecurityService;
 import com.qaobee.hive.services.UserService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
@@ -27,12 +28,15 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.DecodeException;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
+import java.io.UnsupportedEncodingException;
 
 import static com.qaobee.hive.technical.constantes.Constants.ADMIN_HABILIT;
 import static com.qaobee.hive.technical.constantes.Constants.TOKEN;
@@ -68,6 +72,8 @@ public class UserRoute extends AbstractRoute {
     private UserService userService;
     @Inject
     private SecurityService securityService;
+    @Inject
+    private EncryptionService encryptionService;
 
     @Override
     public Router init() {
@@ -115,7 +121,56 @@ public class UserRoute extends AbstractRoute {
 
         router.post("/login").handler(this::login);
 
+        addRoute(router, "/encrypt", HttpMethod.GET,
+                authHandler,
+                this::encrypt);
+
+
+        addRoute(router, "/decrypt", HttpMethod.POST,
+                c -> mandatoryHandler.testBodyParams(c, "_id", "secret"),
+                this::decrypt);
+
         return router;
+    }
+
+    private void decrypt(RoutingContext context) {
+        JsonObject body = context.getBodyAsJson();
+        userService.getUserInfo(body.getString("_id"), res -> {
+            if (res.succeeded()) {
+                try {
+                    JsonObject secretStructure = new JsonObject(new String(Base64.decodeBase64(body.getString("secret")), "UTF-8"));
+                    byte[] salt = res.result().getJsonObject("account").getBinary("salt");
+                    String token = res.result().getJsonObject("account").getString("token");
+                    byte[] encryptedToken = encryptionService.getEncrypted(token, salt);
+                    if (!secretStructure.getString("token", "").equals(Base64.encodeBase64String(encryptedToken))) {
+                        utils.handleError(context, new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", getLocale(context))));
+                    } else {
+                        handleResponse(context, new JsonObject().put("token", token).put("path", secretStructure.getString("path", "")));
+                    }
+                } catch (DecodeException | UnsupportedEncodingException | QaobeeException e){
+                    utils.handleError(context, new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e));
+                }
+            } else {
+                utils.handleError(context, res.cause());
+            }
+        });
+    }
+
+    private void encrypt(RoutingContext context) {
+        userService.getUserInfo(context.user().principal().getString("_id"), res -> {
+            if (res.succeeded()) {
+                try {
+                    JsonObject user = res.result();
+                    byte[] encryptedToken = encryptionService.getEncrypted(user.getJsonObject("account").getString("token"),
+                            user.getJsonObject("account").getBinary("salt"));
+                    handleResponse(context, new JsonObject().put("secret", Base64.encodeBase64String(encryptedToken)));
+                } catch (QaobeeException e) {
+                    utils.handleError(context, e);
+                }
+            } else {
+                utils.handleError(context, res.cause());
+            }
+        });
     }
 
     /**

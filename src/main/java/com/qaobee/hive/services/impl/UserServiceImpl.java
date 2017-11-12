@@ -22,7 +22,7 @@ package com.qaobee.hive.services.impl;
 import com.lowagie.text.pdf.codec.Base64;
 import com.qaobee.hive.verticles.PDFVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.dao.PasswordEncryptionService;
+import com.qaobee.hive.dao.EncryptionService;
 import com.qaobee.hive.services.SandBoxService;
 import com.qaobee.hive.services.TeamService;
 import com.qaobee.hive.services.ActivityService;
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
     @Inject
     private Utils utils;
     @Inject
-    private PasswordEncryptionService passwordEncryptionService;
+    private EncryptionService encryptionService;
     @Inject
     private SandBoxService sandBoxService;
     @Inject
@@ -157,9 +157,9 @@ public class UserServiceImpl implements UserService {
             if (p.succeeded()) {
                 try {
                     if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
-                        final byte[] salt = passwordEncryptionService.generateSalt();
+                        final byte[] salt = encryptionService.generateSalt();
                         user.getAccount().setSalt(salt);
-                        user.getAccount().setPassword(passwordEncryptionService.getEncryptedPassword(user.getAccount().getPasswd(), salt));
+                        user.getAccount().setPassword(encryptionService.getEncrypted(user.getAccount().getPasswd(), salt));
                         user.getAccount().setPasswd(null);
                         u.put(ACCOUNT_FIELD, new JsonObject(Json.encode(user.getAccount())));
                     }
@@ -240,9 +240,9 @@ public class UserServiceImpl implements UserService {
             user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
             if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
                 final byte[] salt;
-                salt = passwordEncryptionService.generateSalt();
+                salt = encryptionService.generateSalt();
                 user.getAccount().setSalt(salt);
-                user.getAccount().setPassword(passwordEncryptionService.getEncryptedPassword(user.getAccount().getPasswd(), salt));
+                user.getAccount().setPassword(encryptionService.getEncrypted(user.getAccount().getPasswd(), salt));
                 user.getAccount().setPasswd(null);
             }
             if (StringUtils.isBlank(user.getAccount().getActivationCode())) {
