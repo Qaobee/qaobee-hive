@@ -72,9 +72,9 @@ class JunitMongoSingleton {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     void startServer(JsonObject config) throws IOException {
-        System.out.println("testing process : " + process);
+        LOG.info("testing process : " + process);
         if (process == null || !process.isProcessRunning()) {
-            System.out.println("Running mongod");
+            LOG.info("Running mongod");
             int port = config.getJsonObject("mongo.db").getInteger("port");
             IMongodConfig mongodConfig = new MongodConfigBuilder()
                     .version(Version.Main.V3_5)

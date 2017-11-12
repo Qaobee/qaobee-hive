@@ -121,8 +121,9 @@ public class UserRoute extends AbstractRoute {
 
         router.post("/login").handler(this::login);
 
-        addRoute(router, "/encrypt", HttpMethod.GET,
+        addRoute(router, "/encrypt", HttpMethod.POST,
                 authHandler,
+                c -> mandatoryHandler.testBodyParams(c, "path"),
                 this::encrypt);
 
 
@@ -163,7 +164,11 @@ public class UserRoute extends AbstractRoute {
                     JsonObject user = res.result();
                     byte[] encryptedToken = encryptionService.getEncrypted(user.getJsonObject("account").getString("token"),
                             user.getJsonObject("account").getBinary("salt"));
-                    handleResponse(context, new JsonObject().put("secret", Base64.encodeBase64String(encryptedToken)));
+                    JsonObject struct = new JsonObject()
+                            .put("path", context.getBodyAsJson().getString("path"))
+                            .put("token",Base64.encodeBase64String(encryptedToken));
+
+                    handleResponse(context, new JsonObject().put("secret", Base64.encodeBase64String(struct.encode().getBytes())));
                 } catch (QaobeeException e) {
                     utils.handleError(context, e);
                 }
