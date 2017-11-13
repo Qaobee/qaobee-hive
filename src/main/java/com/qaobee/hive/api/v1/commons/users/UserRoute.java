@@ -68,6 +68,9 @@ public class UserRoute extends AbstractRoute {
     public static final String PARAM_PUSH_ID = "pushId";
     private static final String PASSWD_FIELD = "passwd"; // NOSONAR
     private static final String SANDBOX_ID_FIELD = "sandboxId";
+    private static final String FIELD_SECRET = "secret";
+    private static final String FIELD_ACCOUNT = "account";
+    private static final String FIELD_TOKEN = "token";
     @Inject
     private UserService userService;
     @Inject
@@ -128,7 +131,7 @@ public class UserRoute extends AbstractRoute {
 
 
         addRoute(router, "/decrypt", HttpMethod.POST,
-                c -> mandatoryHandler.testBodyParams(c, "_id", "secret"),
+                c -> mandatoryHandler.testBodyParams(c, "_id", FIELD_SECRET),
                 this::decrypt);
 
         return router;
@@ -139,14 +142,14 @@ public class UserRoute extends AbstractRoute {
         userService.getUserInfo(body.getString("_id"), res -> {
             if (res.succeeded()) {
                 try {
-                    JsonObject secretStructure = new JsonObject(new String(Base64.decodeBase64(body.getString("secret")), "UTF-8"));
-                    byte[] salt = res.result().getJsonObject("account").getBinary("salt");
-                    String token = res.result().getJsonObject("account").getString("token");
+                    JsonObject secretStructure = new JsonObject(new String(Base64.decodeBase64(body.getString(FIELD_SECRET)), "UTF-8"));
+                    byte[] salt = res.result().getJsonObject(FIELD_ACCOUNT).getBinary("salt");
+                    String token = res.result().getJsonObject(FIELD_ACCOUNT).getString(FIELD_TOKEN);
                     byte[] encryptedToken = encryptionService.getEncrypted(token, salt);
-                    if (!secretStructure.getString("token", "").equals(Base64.encodeBase64String(encryptedToken))) {
+                    if (!secretStructure.getString(FIELD_TOKEN, "").equals(Base64.encodeBase64String(encryptedToken))) {
                         utils.handleError(context, new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", getLocale(context))));
                     } else {
-                        handleResponse(context, new JsonObject().put("token", token).put("path", secretStructure.getString("path", "")));
+                        handleResponse(context, new JsonObject().put(FIELD_TOKEN, token).put("path", secretStructure.getString("path", "")));
                     }
                 } catch (DecodeException | UnsupportedEncodingException | QaobeeException e){
                     utils.handleError(context, new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e));
@@ -162,13 +165,13 @@ public class UserRoute extends AbstractRoute {
             if (res.succeeded()) {
                 try {
                     JsonObject user = res.result();
-                    byte[] encryptedToken = encryptionService.getEncrypted(user.getJsonObject("account").getString("token"),
-                            user.getJsonObject("account").getBinary("salt"));
+                    byte[] encryptedToken = encryptionService.getEncrypted(user.getJsonObject(FIELD_ACCOUNT).getString(FIELD_TOKEN),
+                            user.getJsonObject(FIELD_ACCOUNT).getBinary("salt"));
                     JsonObject struct = new JsonObject()
                             .put("path", context.getBodyAsJson().getString("path"))
-                            .put("token",Base64.encodeBase64String(encryptedToken));
+                            .put(FIELD_TOKEN,Base64.encodeBase64String(encryptedToken));
 
-                    handleResponse(context, new JsonObject().put("secret", Base64.encodeBase64String(struct.encode().getBytes())));
+                    handleResponse(context, new JsonObject().put(FIELD_SECRET, Base64.encodeBase64String(struct.encode().getBytes())));
                 } catch (QaobeeException e) {
                     utils.handleError(context, e);
                 }
@@ -322,7 +325,7 @@ public class UserRoute extends AbstractRoute {
      * @apiSuccess {Object} status {"status", true|false}
      */
     private void logout(RoutingContext context) {
-        securityService.logout(context.request().getHeader("token"), r -> handleStatus(r.succeeded() && r.result(), context));
+        securityService.logout(context.request().getHeader(FIELD_TOKEN), r -> handleStatus(r.succeeded() && r.result(), context));
     }
 
     /**
