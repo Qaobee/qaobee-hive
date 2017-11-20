@@ -25,9 +25,10 @@ import com.qaobee.hive.business.model.commons.users.account.Card;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.dao.MailUtils;
 import com.qaobee.hive.dao.TemplatesDAO;
-import com.qaobee.hive.dao.Utils;
 import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
-import com.qaobee.hive.services.*;
+import com.qaobee.hive.services.MongoDB;
+import com.qaobee.hive.services.NotificationsService;
+import com.qaobee.hive.services.ShippingService;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
@@ -80,10 +81,6 @@ public class ShippingServiceImpl implements ShippingService {
     @Inject
     private NotificationsService notificationsService;
     @Inject
-    private Utils utils;
-    @Inject
-    private UserService userService;
-    @Inject
     @Named("stripe")
     private JsonObject stripe;
 
@@ -94,7 +91,7 @@ public class ShippingServiceImpl implements ShippingService {
         this.vertx = vertx;
     }
 
-    private void doPay(User user, JsonObject paymentData, String locale, int planId, Plan plan, int amount, Handler<AsyncResult<JsonObject>> resultHandler) {
+    private void doPay(User user, JsonObject paymentData, String locale, int planId, Plan plan, Boolean yearly, Handler<AsyncResult<JsonObject>> resultHandler) {
         // Vérifier si on n'a pas déjà un customer id sur ce user
         String customerId = user.getAccount().getListPlan().get(planId).getCardId();
         getCustomerInfo(customerId, user, paymentData, locale, customer -> {
@@ -103,16 +100,16 @@ public class ShippingServiceImpl implements ShippingService {
                     getSubscriptionInfo(user.getAccount().getListPlan().get(planId).getPaymentId(), subscription -> {
                         if (subscription.succeeded()) {
                             if (subscription.result() != null) {
-                                proceedExistingSubscription(user, planId, subscription.result(), paymentData, customer.result(), plan, amount, locale, resultHandler);
+                                proceedExistingSubscription(user, planId, subscription.result(), paymentData, customer.result(), plan, yearly, locale, resultHandler);
                             } else {
-                                registerSubscription(user, paymentData, locale, customer.result(), plan, planId, amount, resultHandler);
+                                registerSubscription(user, paymentData, locale, customer.result(), plan, planId, yearly, resultHandler);
                             }
                         } else {
                             resultHandler.handle(Future.failedFuture(subscription.cause()));
                         }
                     });
                 } else {
-                    registerSubscription(user, paymentData, locale, customer.result(), plan, planId, amount, resultHandler);
+                    registerSubscription(user, paymentData, locale, customer.result(), plan, planId, yearly, resultHandler);
                 }
             } else {
                 resultHandler.handle(Future.failedFuture(customer.cause()));
@@ -121,13 +118,13 @@ public class ShippingServiceImpl implements ShippingService {
     }
 
     private void proceedExistingSubscription(User user, int planId, Subscription subscription, JsonObject paymentData,// NOSONAR
-                                             Customer customer, Plan plan, int amount, String locale,
+                                             Customer customer, Plan plan, Boolean yearly, String locale,
                                              Handler<AsyncResult<JsonObject>> resultHandler) {
         user.getAccount().getListPlan().get(planId).setStatus(subscription.getStatus());
         mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, upsertRes -> {
             if (upsertRes.succeeded()) {
                 if ("canceled".equals(subscription.getStatus()) || "unpaid".equals(subscription.getStatus())) {
-                    registerSubscription(user, paymentData, locale, customer, plan, planId, amount, resultHandler);
+                    registerSubscription(user, paymentData, locale, customer, plan, planId, yearly, resultHandler);
                 } else {
                     resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, Messages.getString("subscription.exists", locale))));
                 }
@@ -139,26 +136,30 @@ public class ShippingServiceImpl implements ShippingService {
     }
 
     private void registerSubscription(User user, JsonObject paymentData, String locale, Customer customer, Plan plan,// NOSONAR
-                                      int planId, int amount, Handler<AsyncResult<JsonObject>> resultHandler) {
+                                      int planId, Boolean yearly, Handler<AsyncResult<JsonObject>> resultHandler) {
         try {
             Token token = Token.retrieve(paymentData.getString("token", ""));
             if (token != null) {
                 Map<String, Object> params = new HashMap<>();
                 params.put("customer", customer.getId());
-                params.put("plan", plan.getLevelPlan().name());
+                if(yearly) {
+                    params.put("plan", plan.getLevelPlan().name() + "_Y");
+                } else {
+                    params.put("plan", plan.getLevelPlan().name());
+                }
                 Map<String, Object> subscriptionMetadata = new HashMap<>();
                 subscriptionMetadata.put("_id", user.get_id());
                 subscriptionMetadata.put(LOCALE_FIELD, locale);
                 subscriptionMetadata.put(PLANID_FIELD, planId);
                 params.put(METADATA_FIELD, subscriptionMetadata);
                 Subscription subscription = Subscription.create(params);
-                user.getAccount().getListPlan().get(planId).setAmountPaid(amount / 100);
+                user.getAccount().getListPlan().get(planId).setAmountPaid(plan.getAmountPaid());
                 user.getAccount().getListPlan().get(planId).setPaymentId(subscription.getId());
                 user.getAccount().getListPlan().get(planId).setPaidDate(System.currentTimeMillis());
                 user.getAccount().getListPlan().get(planId).setPeriodicity(MONTHLY);
                 user.getAccount().getListPlan().get(planId).setCardId(customer.getId());
                 user.getAccount().getListPlan().get(planId).setStatus(subscription.getStatus());
-                user.getAccount().getListPlan().get(planId).setEndPeriodDate(-1L);
+                user.getAccount().getListPlan().get(planId).setEndPeriodDate(subscription.getCurrentPeriodEnd());
                 user.getAccount().setStatus(AccountStatus.ACTIVE);
                 JsonObject cardJson = new JsonObject(token.toJson()).getJsonObject("card");
                 Card card = new Card();
@@ -199,11 +200,16 @@ public class ShippingServiceImpl implements ShippingService {
         }
     }
 
-    private int getAmountToPay(Plan plan) {
+    private int getAmountToPay(Plan plan, Boolean yearly) {
         if (runtime.getJsonObject("plan").containsKey(plan.getLevelPlan().name())) {
-            return runtime.getJsonObject("plan").getJsonObject(plan.getLevelPlan().name()).getInteger("price") * 100;
+            if (yearly) {
+                return runtime.getJsonObject("plan").getJsonObject(plan.getLevelPlan().name()).getInteger("price_y");
+            } else {
+                return runtime.getJsonObject("plan").getJsonObject(plan.getLevelPlan().name()).getInteger("price");
+            }
+        } else {
+            return 0;
         }
-        return 0;
     }
 
     private static void getSubscriptionInfo(String paymentId, Handler<AsyncResult<Subscription>> resultHandler) {
@@ -274,9 +280,13 @@ public class ShippingServiceImpl implements ShippingService {
         } else {
             user.getJsonObject(ACCOUNT_FIELD).getJsonArray(LIST_PLAN_FIELD).getJsonObject(planId)
                     .put(Constants.STATUS, subscription.getString("status"));
-            // TODO : modify here for the yearly subscription
+
             Calendar gc = GregorianCalendar.getInstance();
-            gc.add(Calendar.MONTH, 1);
+            if("month".equals(subscription.getJsonObject("plan").getString("interval"))) {
+                gc.add(Calendar.MONTH, 1);
+            } else if("year".equals(subscription.getJsonObject("plan").getString("interval"))) {
+                gc.add(Calendar.YEAR, 1);
+            }
             user.getJsonObject(ACCOUNT_FIELD).getJsonArray(LIST_PLAN_FIELD).getJsonObject(planId)
                     .put("endPeriodDate", gc.getTimeInMillis());
             mongo.upsert(user, DBCollections.USER, upsertRes -> {
@@ -331,15 +341,14 @@ public class ShippingServiceImpl implements ShippingService {
         Stripe.apiKey = stripe.getString("api_secret"); // NOSONAR
         try {
             User user = Json.decodeValue(u.encode(), User.class);
-            utils.testMandatoryParams(paymentData, PLANID_FIELD);
             int planId = paymentData.getInteger(PLANID_FIELD);
             if (user.getAccount().getListPlan().size() <= planId) {
                 resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "planId is invalid")));
             } else {
                 Plan plan = user.getAccount().getListPlan().get(planId);
-                int amount = getAmountToPay(plan);
-                if (amount > 0) {
-                    doPay(user, paymentData, locale, planId, plan, amount, resultHandler);
+                plan.setAmountPaid(getAmountToPay(plan, paymentData.getBoolean("yearly", false)));
+                if (plan.getAmountPaid() > 0) {
+                    doPay(user, paymentData, locale, planId, plan, paymentData.getBoolean("yearly", false), resultHandler);
                 } else {
                     resultHandler.handle(Future.succeededFuture(new JsonObject().put(Constants.STATUS, true)));
                 }

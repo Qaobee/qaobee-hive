@@ -24,7 +24,6 @@ import com.qaobee.hive.services.ShippingService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
@@ -45,7 +44,7 @@ public class ShippingRoute extends AbstractRoute {
 
         addRoute(router, "/pay", HttpMethod.POST,
                 authHandler,
-                c -> mandatoryHandler.testBodyParams(c, "data"),
+                c -> mandatoryHandler.testBodyParams(c, "planId", "levelPlan", "user_id", "yearly", "token"),
                 this::pay);
         addRoute(router, "/unsubscribe/:id", HttpMethod.GET,
                 authHandler,
@@ -73,7 +72,7 @@ public class ShippingRoute extends AbstractRoute {
      * @apiHeader {String} token
      */
     private void pay(RoutingContext context) {
-        shippingService.pay(context.user().principal(), context.getBodyAsJson().getJsonObject("data", new JsonObject()), getLocale(context), handleResponse(context));
+        shippingService.pay(context.user().principal(), context.getBodyAsJson(), getLocale(context), handleResponse(context));
     }
 
     /**
