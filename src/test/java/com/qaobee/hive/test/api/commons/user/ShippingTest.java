@@ -20,6 +20,7 @@
 package com.qaobee.hive.test.api.commons.user;
 
 import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.business.model.commons.users.account.LevelPlan;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
@@ -192,8 +193,11 @@ public class ShippingTest extends VertxJunitSupport {
         generateLoggedUser().setHandler(u -> {
             initMockStripe(u.result());
             JsonObject request = new JsonObject()
-                            .put("planId", 0)
-                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
+                    .put("planId", 0)
+                    .put("levelPlan", LevelPlan.FREEMIUM.name())
+                    .put("user_id", u.result().get_id())
+                    .put("yearly", false)
+                    .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
             given().header(TOKEN, u.result().getAccount().getToken())
                     .body(request.encode())
                     .when().post(BASE_URL + "/pay")
@@ -225,8 +229,11 @@ public class ShippingTest extends VertxJunitSupport {
         generateLoggedUser().setHandler(u -> {
             initMockStripe(u.result());
             JsonObject request = new JsonObject()
-                            .put("planId", 1)
-                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
+                    .put("planId", 1)
+                    .put("levelPlan", LevelPlan.FREEMIUM.name())
+                    .put("user_id", u.result().get_id())
+                    .put("yearly", false)
+                    .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
             System.out.println(BASE_URL + "/pay");
             given().header(TOKEN, u.result().getAccount().getToken())
                     .body(request.encode())
@@ -250,8 +257,11 @@ public class ShippingTest extends VertxJunitSupport {
                 if (id.succeeded()) {
                     initMockStripe(u.result());
                     JsonObject request = new JsonObject()
-                                    .put("planId", 0)
-                                    .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
+                            .put("planId", 0)
+                            .put("levelPlan", LevelPlan.FREEMIUM.name())
+                            .put("user_id", u.result().get_id())
+                            .put("yearly", false)
+                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
 
                     given().header(TOKEN, u.result().getAccount().getToken())
                             .body(request.encode())
@@ -293,8 +303,11 @@ public class ShippingTest extends VertxJunitSupport {
                 if (id.succeeded()) {
                     initMockStripe(u.result());
                     JsonObject request = new JsonObject()
-                                    .put("planId", 0)
-                                    .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
+                            .put("planId", 0)
+                            .put("levelPlan", LevelPlan.FREEMIUM.name())
+                            .put("user_id", u.result().get_id())
+                            .put("yearly", true)
+                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
 
                     given().header(TOKEN, u.result().getAccount().getToken())
                             .body(request.encode())
@@ -334,8 +347,11 @@ public class ShippingTest extends VertxJunitSupport {
                 if (id.succeeded()) {
                     initMockStripe(u.result());
                     JsonObject request = new JsonObject()
-                                    .put("planId", 0)
-                                    .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
+                            .put("planId", 0)
+                            .put("levelPlan", LevelPlan.FREEMIUM.name())
+                            .put("user_id", u.result().get_id())
+                            .put("yearly", false)
+                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
 
                     given().header(TOKEN, u.result().getAccount().getToken())
                             .body(request.encode())
@@ -364,8 +380,11 @@ public class ShippingTest extends VertxJunitSupport {
                     initMockStripe(u.result());
 
                     JsonObject request = new JsonObject()
-                                    .put("planId", 0)
-                                    .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
+                            .put("planId", 0)
+                            .put("levelPlan", LevelPlan.FREEMIUM.name())
+                            .put("user_id", u.result().get_id())
+                            .put("yearly", false)
+                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
 
                     given().header(TOKEN, u.result().getAccount().getToken())
                             .body(request.encode())
@@ -405,8 +424,11 @@ public class ShippingTest extends VertxJunitSupport {
                 if (id.succeeded()) {
                     initMockStripe(u.result());
                     JsonObject request = new JsonObject()
-                                    .put("planId", 0)
-                                    .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
+                            .put("planId", 0)
+                            .put("levelPlan", LevelPlan.FREEMIUM.name())
+                            .put("user_id", u.result().get_id())
+                            .put("yearly", false)
+                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
 
                     given().header(TOKEN, u.result().getAccount().getToken())
                             .body(request.encode())
@@ -446,8 +468,11 @@ public class ShippingTest extends VertxJunitSupport {
             mongo.upsert(new JsonObject(Json.encode(u.result())), DBCollections.USER, id -> {
                 if (id.succeeded()) {
                     JsonObject request = new JsonObject()
-                                    .put("planId", 0)
-                                    .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
+                            .put("planId", 0)
+                            .put("levelPlan", LevelPlan.FREEMIUM.name())
+                            .put("user_id", u.result().get_id())
+                            .put("yearly", false)
+                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
                     given().header(TOKEN, u.result().getAccount().getToken())
                             .body(request.encode())
                             .when().post(BASE_URL + "/pay")
@@ -506,8 +531,11 @@ public class ShippingTest extends VertxJunitSupport {
         generateLoggedUser().setHandler(u -> {
             initMockStripe(u.result());
             JsonObject request = new JsonObject()
-                            .put("planId", 0)
-                            .put("token", "bla");
+                    .put("planId", 0)
+                    .put("levelPlan", LevelPlan.FREEMIUM.name())
+                    .put("user_id", u.result().get_id())
+                    .put("yearly", false)
+                    .put("token", "bla");
             given().header(TOKEN, u.result().getAccount().getToken())
                     .body(request.encode())
                     .when().post(BASE_URL + "/pay")
@@ -527,8 +555,11 @@ public class ShippingTest extends VertxJunitSupport {
         generateLoggedUser().setHandler(u -> {
             initMockStripe(u.result());
             JsonObject request = new JsonObject()
-                            .put("planId", 0)
-                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
+                    .put("planId", 0)
+                    .put("levelPlan", LevelPlan.FREEMIUM.name())
+                    .put("user_id", u.result().get_id())
+                    .put("yearly", false)
+                    .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
             initMockStripe(u.result());
             if (mockServer.isRunning()) {
                 mockServer.stop();
@@ -552,8 +583,11 @@ public class ShippingTest extends VertxJunitSupport {
         generateLoggedUser().setHandler(u -> {
             initMockStripe(u.result());
             JsonObject request = new JsonObject()
-                            .put("planId", 0)
-                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
+                    .put("planId", 0)
+                    .put("levelPlan", LevelPlan.FREEMIUM.name())
+                    .put("user_id", u.result().get_id())
+                    .put("yearly", false)
+                    .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu");
             given().header(TOKEN, u.result().getAccount().getToken())
                     .body(request.encode())
                     .when().post(BASE_URL + "/pay")

@@ -18,16 +18,20 @@
       "recaptcha": false,
       "plan": {
         "FREEMIUM": {
-          "price": 8
+          "price": 8,
+          "price_y": 87
         },
-        "DISCOVERY": {
-          "price": 5
+        "TEAMS": {
+          "price": 30,
+          "price_y": 324
         },
-        "PREMIUM": {
-          "price": 7
+        "TEAMM": {
+          "price": 36,
+          "price_y": 389
         },
-        "TEAM_PLUS": {
-          "price": 9
+        "TEAMXL": {
+          "price": 48,
+          "price_y": 486
         }
       }
     },
