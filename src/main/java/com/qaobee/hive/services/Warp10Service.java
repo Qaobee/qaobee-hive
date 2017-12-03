@@ -7,7 +7,6 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Warp 10 service.
@@ -33,7 +32,7 @@ public interface Warp10Service {
      * @return the warp 10 service
      */
     static Warp10Service createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(Warp10Service.class, vertx, address);
+        return new Warp10ServiceVertxEBProxy(vertx, address);
     }
 
     /**

@@ -30,7 +30,7 @@ apply plugin: "se.bjurr.gitchangelog.git-changelog-gradle-plugin"
 
 def generateSrcPath = "$buildDir/generated-src"
 def generatedSrcDir = file("$buildDir/generated-src")
-def version = '3.4.2'
+def version = '3.5.0'
 mainClassName = 'com.qaobee.hive.Main'
 repositories {
     jcenter()
@@ -62,6 +62,8 @@ dependencies {
     compile "io.vertx:vertx-web:$version"
     compile "io.vertx:vertx-service-proxy:$version"
     compile "io.vertx:vertx-codegen:$version"
+    compile "io.vertx:vertx-service-proxy:$version:processor"
+    compileOnly "io.vertx:vertx-codegen:$version"
     compile "io.vertx:vertx-mail-client:$version"
     compile "io.vertx:vertx-web-client:$version"
     compile "io.vertx:vertx-dropwizard-metrics:$version"

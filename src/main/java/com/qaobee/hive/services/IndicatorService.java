@@ -27,7 +27,6 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Indicator.
@@ -54,7 +53,7 @@ public interface IndicatorService {
      * @return the indicator
      */
     static IndicatorService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(IndicatorService.class, vertx, address);
+        return new IndicatorServiceVertxEBProxy(vertx, address);
     }
 
     /**

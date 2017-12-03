@@ -8,6 +8,8 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.MongoClientCustom;
 import io.netty.handler.codec.http.HttpHeaderValues;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -100,6 +102,16 @@ public class QaobeeAuthHandler implements AuthHandler {
     public AuthHandler addAuthorities(Set<String> authorities) {
         this.authorities.addAll(authorities);
         return this;
+    }
+
+    @Override
+    public void parseCredentials(RoutingContext context, Handler<AsyncResult<JsonObject>> handler) {
+
+    }
+
+    @Override
+    public void authorize(io.vertx.ext.auth.User user, Handler<AsyncResult<Void>> handler) {
+
     }
 
     private static String getToken(HttpServerRequest request) {

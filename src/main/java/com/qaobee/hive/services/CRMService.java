@@ -5,7 +5,6 @@ import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Crm dao.
@@ -35,7 +34,7 @@ public interface CRMService {
      * @return the crm service
      */
     static CRMService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(CRMService.class, vertx, address);
+        return new CRMServiceVertxEBProxy(vertx, address);
     }
 
     /**

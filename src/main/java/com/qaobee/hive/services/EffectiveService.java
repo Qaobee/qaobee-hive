@@ -27,7 +27,6 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Effective service.
@@ -56,7 +55,7 @@ public interface EffectiveService {
      * @return the effective service
      */
     static EffectiveService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(EffectiveService.class, vertx, address);
+        return new EffectiveServiceVertxEBProxy(vertx, address);
     }
 
     /**

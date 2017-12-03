@@ -26,7 +26,6 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface User service.
@@ -55,7 +54,7 @@ public interface UserService {
      * @return the user service
      */
     static UserService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(UserService.class, vertx, address);
+        return new UserServiceVertxEBProxy(vertx, address);
     }
 
     /**

@@ -27,7 +27,6 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Championship service.
@@ -54,7 +53,7 @@ public interface ChampionshipService {
      * @return the championship service
      */
     static ChampionshipService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(ChampionshipService.class, vertx, address);
+        return new ChampionshipServiceVertxEBProxy(vertx, address);
     }
 
     /**

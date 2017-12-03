@@ -27,7 +27,6 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Season.
@@ -54,7 +53,7 @@ public interface SeasonService {
      * @return the season
      */
     static SeasonService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(SeasonService.class, vertx, address);
+        return new SeasonServiceVertxEBProxy(vertx, address);
     }
 
     /**

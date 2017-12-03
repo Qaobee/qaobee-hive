@@ -27,7 +27,6 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Notifications service.
@@ -54,7 +53,7 @@ public interface NotificationsService {
      * @return the notifications service
      */
     static NotificationsService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(NotificationsService.class, vertx, address);
+        return new NotificationsServiceVertxEBProxy(vertx, address);
     }
 
     /**

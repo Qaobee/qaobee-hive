@@ -28,7 +28,6 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Share service.
@@ -57,7 +56,7 @@ public interface ShareService {
      * @return the share service
      */
     static ShareService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(ShareService.class, vertx, address);
+        return new ShareServiceVertxEBProxy(vertx, address);
     }
 
     /**

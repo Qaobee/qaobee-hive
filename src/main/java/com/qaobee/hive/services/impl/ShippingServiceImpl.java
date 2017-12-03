@@ -65,6 +65,12 @@ public class ShippingServiceImpl implements ShippingService {
     private static final String LIST_PLAN_FIELD = "listPlan";
     private static final String OBJECT_FIELD = "object";
     private static final String PLANID_FIELD = "planId";
+    private static final String RESULT_FIELD = "result";
+    private static final String MAIL_FROM_KEY = "mail.from";
+    private static final String SUBJECT_FIELD = "subject";
+    private static final String CONTENT_TYPE_FIELD = "content_type";
+    private static final String INVALID_PLAN_ID_ERR_MESS = "planId is invalid";
+    private static final String CONTENT_TYPE_VALUE = "text/html";
 
     @Inject
     private MongoDB mongo;
@@ -79,8 +85,6 @@ public class ShippingServiceImpl implements ShippingService {
     private NotificationsService notificationsService;
     @Inject
     private Utils utils;
-    @Inject
-    private UserService userService;
     @Inject
     @Named("stripe")
     private JsonObject stripe;
@@ -251,12 +255,12 @@ public class ShippingServiceImpl implements ShippingService {
                     .put(TemplatesDAOImpl.DATA, mailUtils.generatePaymentBody(user,
                             locale,
                             user.getAccount().getListPlan().get(planId)));
-            final String tplRes = templatesDAO.generateMail(tplReq).getString("result");
+            final String tplRes = templatesDAO.generateMail(tplReq).getString(RESULT_FIELD);
             final JsonObject emailReq = new JsonObject()
-                    .put("from", runtime.getString("mail.from"))
+                    .put("from", runtime.getString(MAIL_FROM_KEY))
                     .put("to", user.getContact().getEmail())
-                    .put("subject", Messages.getString("mail.payment.subject", locale))
-                    .put("content_type", "text/html")
+                    .put(SUBJECT_FIELD, Messages.getString("mail.payment.subject", locale))
+                    .put(CONTENT_TYPE_FIELD, CONTENT_TYPE_VALUE)
                     .put("body", tplRes);
             vertx.eventBus().publish(MailVerticle.INTERNAL_MAIL, emailReq);
             resultHandler.handle(Future.succeededFuture(new JsonObject().put(Constants.STATUS, true)));
@@ -268,10 +272,10 @@ public class ShippingServiceImpl implements ShippingService {
 
     private void registerPayment(final JsonObject subscription, JsonObject user, final User u, int planId, Handler<AsyncResult<Boolean>> resultHandler) {
         if (user.getJsonObject(ACCOUNT_FIELD).getJsonArray(LIST_PLAN_FIELD).size() <= planId) {
-            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "planId is invalid")));
+            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, INVALID_PLAN_ID_ERR_MESS)));
         } else {
             user.getJsonObject(ACCOUNT_FIELD).getJsonArray(LIST_PLAN_FIELD).getJsonObject(planId)
-                    .put(Constants.STATUS, subscription.getString("status"));
+                    .put(Constants.STATUS, subscription.getString(Constants.STATUS));
             mongo.upsert(user, DBCollections.USER, upsertRes -> {
                 if (upsertRes.succeeded()) {
                     try {
@@ -280,13 +284,13 @@ public class ShippingServiceImpl implements ShippingService {
                                 .put(TemplatesDAOImpl.DATA, mailUtils.generatePaymentBody(u,
                                         subscription.getJsonObject(METADATA_FIELD).getString(LOCALE_FIELD),
                                         u.getAccount().getListPlan().get(planId)));
-                        final String tplRes = templatesDAO.generateMail(tplReq).getString("result");
+                        final String tplRes = templatesDAO.generateMail(tplReq).getString(RESULT_FIELD);
                         final JsonObject emailReq = new JsonObject()
-                                .put("from", runtime.getString("mail.from"))
+                                .put("from", runtime.getString(MAIL_FROM_KEY))
                                 .put("to", u.getContact().getEmail())
-                                .put("subject", Messages.getString("mail.payment.subject",
+                                .put(SUBJECT_FIELD, Messages.getString("mail.payment.subject",
                                         subscription.getJsonObject(METADATA_FIELD).getString(LOCALE_FIELD)))
-                                .put("content_type", "text/html")
+                                .put(CONTENT_TYPE_FIELD, CONTENT_TYPE_VALUE)
                                 .put("body", tplRes);
                         vertx.eventBus().publish(MailVerticle.INTERNAL_MAIL, emailReq);
                         resultHandler.handle(Future.succeededFuture(true));
@@ -309,7 +313,7 @@ public class ShippingServiceImpl implements ShippingService {
             utils.testMandatoryParams(paymentData, PLANID_FIELD);
             int planId = paymentData.getInteger(PLANID_FIELD);
             if (user.getAccount().getListPlan().size() <= planId) {
-                resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "planId is invalid")));
+                resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, INVALID_PLAN_ID_ERR_MESS)));
             } else {
                 Plan plan = user.getAccount().getListPlan().get(planId);
                 int amount = getAmountToPay(plan);
@@ -331,7 +335,7 @@ public class ShippingServiceImpl implements ShippingService {
         try {
             User user = Json.decodeValue(u.encode(), User.class);
             if (user.getAccount().getListPlan().size() <= planId) {
-                resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "planId is invalid")));
+                resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, INVALID_PLAN_ID_ERR_MESS)));
             } else {
                 Plan plan = user.getAccount().getListPlan().get(planId);
                 String customerId = user.getAccount().getListPlan().get(planId).getCardId();
@@ -384,7 +388,7 @@ public class ShippingServiceImpl implements ShippingService {
     @Override
     public void webHook(JsonObject body, Handler<AsyncResult<Boolean>> resultHandler) {
         try {
-            LOG.info(body.getString("type") + " : " + body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getString("status"));
+            LOG.info(body.getString("type") + " : " + body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getString(Constants.STATUS));
             if (body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject(METADATA_FIELD).containsKey(PLANID_FIELD)) {
                 int planId = Integer.parseInt(body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject(METADATA_FIELD).getString(PLANID_FIELD));
                 Customer customer = Customer.retrieve(body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getString("customer"));

@@ -28,7 +28,6 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 import java.util.List;
 
@@ -57,7 +56,7 @@ public interface MongoDB {
      * @return the mongo db
      */
     static MongoDB createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(MongoDB.class, vertx, address);
+        return new MongoDBVertxEBProxy(vertx, address);
     }
 
     /**
