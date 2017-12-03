@@ -6,7 +6,6 @@ import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.serviceproxy.ProxyHelper;
 
@@ -16,7 +15,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @ProxyGen
 @VertxGen
 public interface Warp10Service {
-
     /**
      * Create warp 10 service.
      *
@@ -39,32 +37,46 @@ public interface Warp10Service {
     }
 
     /**
-     * Push gts.
+     * Send string.
      *
-     * @param series        the series
-     * @param time          the time
-     * @param value         the value
+     * @param className     the class name
      * @param labels        the labels
+     * @param value         the value
      * @param resultHandler the result handler
      */
-    void pushGTS(String series, long time, JsonObject value, JsonObject labels, Handler<AsyncResult<Boolean>> resultHandler);
+    void sendString(String className, JsonObject labels,  String value, Handler<AsyncResult<Boolean>> resultHandler);
 
     /**
-     * Push gts str.
+     * Send string.
      *
-     * @param series        the series
-     * @param time          the time
-     * @param value         the value
+     * @param timestamp     the timestamp
+     * @param className     the class name
      * @param labels        the labels
+     * @param value         the value
      * @param resultHandler the result handler
      */
-    void pushGTSStr(String series, long time, String value, JsonObject labels, Handler<AsyncResult<Boolean>> resultHandler);
+    void sendStringWithTS(long timestamp, String className, JsonObject labels,  String value, Handler<AsyncResult<Boolean>> resultHandler);
 
     /**
-     * Execute warp script.
+     * Send number.
      *
-     * @param script        the script
+     * @param className     the class name
+     * @param labels        the labels
+     * @param value         the value
      * @param resultHandler the result handler
      */
-    void executeWarpScript(String script, Handler<AsyncResult<JsonArray>> resultHandler);
+    void sendNumber(String className, JsonObject labels,  double value, Handler<AsyncResult<Boolean>> resultHandler);
+
+    /**
+     * Send number.
+     *
+     * @param timestamp     the timestamp
+     * @param className     the class name
+     * @param labels        the labels
+     * @param value         the value
+     * @param resultHandler the result handler
+     */
+    void sendNumberWithTS(long timestamp, String className, JsonObject labels,  double value, Handler<AsyncResult<Boolean>> resultHandler);
+
+
 }

@@ -24,6 +24,7 @@ import com.qaobee.hive.services.TeamService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
@@ -152,6 +153,10 @@ public class SB_TeamRoute extends AbstractRoute {// NOSONAR
      * @apiSuccess {Object} Team com.qaobee.hive.business.model.sandbox.effective.Team
      */
     private void addTeam(RoutingContext context) {
+        JsonObject labels = new JsonObject().put("user_id", context.user().principal().getString("_id"));
+        warp10Service.sendNumber("com.qaobee.mesures.team", labels, 1, r -> {
+            //empty
+        });
         teamService.addTeam(context.getBodyAsJson(), context.user().principal().getString("_id"), getLocale(context), handleResponse(context));
     }
 }

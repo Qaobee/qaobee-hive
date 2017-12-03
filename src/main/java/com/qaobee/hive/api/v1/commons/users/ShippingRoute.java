@@ -59,6 +59,10 @@ public class ShippingRoute extends AbstractRoute {
     }
 
     private void unsubscribe(RoutingContext context) {
+        JsonObject labels = new JsonObject().put("user_id", context.user().principal().getString("_id"));
+        warp10Service.sendNumber("com.qaobee.mesures.signup.unsubscribe", labels, 1, r -> {
+            //empty
+        });
         shippingService.unsubscribe(context.user().principal(), Integer.parseInt(context.request().getParam("id")), getLocale(context), handleResponse(context));
     }
 
@@ -73,6 +77,10 @@ public class ShippingRoute extends AbstractRoute {
      * @apiHeader {String} token
      */
     private void pay(RoutingContext context) {
+        JsonObject labels = new JsonObject().put("user_id", context.user().principal().getString("_id"));
+        warp10Service.sendNumber("com.qaobee.mesures.signup.pay", labels, 1, r -> {
+            //empty
+        });
         shippingService.pay(context.user().principal(), context.getBodyAsJson().getJsonObject("data", new JsonObject()), getLocale(context), handleResponse(context));
     }
 

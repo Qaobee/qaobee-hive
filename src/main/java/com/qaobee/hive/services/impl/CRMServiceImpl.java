@@ -40,7 +40,6 @@ public class CRMServiceImpl implements CRMService {
 
     @Override
     public void registerUser(JsonObject user, boolean firstLogin) {
-
         if (!mailchimp.getBoolean("test", false)) {
             JsonArray members = new JsonArray();
             String env = "DEV";

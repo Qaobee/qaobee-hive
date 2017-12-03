@@ -24,6 +24,7 @@ import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import com.qaobee.hive.technical.vertx.Warp10Handler;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.DeploymentOptions;
@@ -68,6 +69,11 @@ public class CoordinatorVerticle extends AbstractGuiceVerticle {
     @Inject
     @Named("runtime")
     private JsonObject runtime;
+    /**
+     * The Warp 10 handler.
+     */
+    @Inject
+    private Warp10Handler warp10Handler;
 
     @Override
     public void start(Future<Void> startFuture) {
@@ -93,6 +99,7 @@ public class CoordinatorVerticle extends AbstractGuiceVerticle {
             );
         }
         router.route().path("/*").produces("application/json").handler(CoordinatorVerticle::jsonHandler);
+        router.route().path("/*").produces("application/json").handler(warp10Handler::hit);
         router.get("/").handler(event -> event.response().end("Welcome to Qaobee Hive"));
 
         // Load Routes

@@ -21,9 +21,9 @@ package com.qaobee.hive.services.impl;
 
 import com.qaobee.hive.api.v1.commons.referencial.ChampionshipRoute;
 import com.qaobee.hive.services.ChampionshipService;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.services.MongoDB;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;

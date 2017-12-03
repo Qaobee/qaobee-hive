@@ -90,14 +90,12 @@
       "project": "QHBWEB",
       "userName": "feedback"
     },
-    "warp10": {
-      "scheme": "http",
-      "host": "127.0.0.1",
+    "warp10" : {
       "port": 8080,
-      "path": "/api/v0/",
-      "read": ".uzX46BaNUjvFUp6RuozKdMJNJ3s.wD9pbGZUfV5KtfXO2EJwWWfHUUYBCXanNMD3jrpn0Zpqk1_zxXHHG.4NUaYrvRpqM1RSK5DDyLMw6NXhNOFmbAzwjVJAQFrr5l1",
-      "write": "fLF.YDi0iFwn.lH9Vu0BraAbeX2HgH7WrfvpFYOkjHrxQOTW_STFl07fgLH52mBAmF2GJtVwdCrm6aYyp3eCZUIUTbmzjkns3pf_YIetMgk",
-      "app": "qaobee"
+      "host" :  "vps269267",
+      "path" : "/api/v0/",
+      "scheme" : "http",
+      "writeToken" : "M86jDlgrRF7zA9VJzbbsh35tZY1RtJNMrDYO2GN47v8YNjxAxjnvY4c6iLN8l2DYRUb_wPRDA.yutcnr2E3oz5TGb1bd.kuk4B3QDmfeRRzRkiTdeFvWCfIjC7ojpruN"
     }
   },
   "REC": {
@@ -189,6 +187,13 @@
       "url": "https://qaobee.atlassian.net",
       "project": "QHBWEB",
       "userName": "feedback"
+    },
+    "warp10" : {
+      "port": 8080,
+      "host" :  "vps269267",
+      "path" : "/api/v0/",
+      "scheme" : "http",
+      "writeToken" : "M86jDlgrRF7zA9VJzbbsh35tZY1RtJNMrDYO2GN47v8YNjxAxjnvY4c6iLN8l2DYRUb_wPRDA.yutcnr2E3oz5TGb1bd.kuk4B3QDmfeRRzRkiTdeFvWCfIjC7ojpruN"
     }
   },
   "PROD": {
@@ -280,6 +285,13 @@
       "url": "https://qaobee.atlassian.net",
       "project": "QHBWEB",
       "userName": "feedback"
+    },
+    "warp10" : {
+      "port": 8080,
+      "host" :  "vps269267",
+      "path" : "/api/v0/",
+      "scheme" : "http",
+      "writeToken" : "M86jDlgrRF7zA9VJzbbsh35tZY1RtJNMrDYO2GN47v8YNjxAxjnvY4c6iLN8l2DYRUb_wPRDA.yutcnr2E3oz5TGb1bd.kuk4B3QDmfeRRzRkiTdeFvWCfIjC7ojpruN"
     }
   }
 }

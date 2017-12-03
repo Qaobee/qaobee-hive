@@ -86,6 +86,13 @@
       "project": "QHBWEB",
       "userName": "feedback"
     },
+    "warp10" : {
+      "port": 8080,
+      "host" :  "vps269267",
+      "path" : "/api/v0/",
+      "scheme" : "http",
+      "writeToken" : "M86jDlgrRF7zA9VJzbbsh35tZY1RtJNMrDYO2GN47v8YNjxAxjnvY4c6iLN8l2DYRUb_wPRDA.yutcnr2E3oz5TGb1bd.kuk4B3QDmfeRRzRkiTdeFvWCfIjC7ojpruN"
+    },
     "junit": {
       "user": {
         "name": "MARIN",

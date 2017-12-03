@@ -24,6 +24,7 @@ import com.qaobee.hive.services.EventService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
@@ -156,6 +157,10 @@ public class SB_EventRoute extends AbstractRoute { // NOSONAR
      * @apiSuccess {Object} event created event
      */
     private void addEvent(RoutingContext context) {
+        JsonObject labels = new JsonObject().put("user_id", context.user().principal().getString("_id"));
+        warp10Service.sendNumber("com.qaobee.mesures.event", labels, 1, r -> {
+            //empty
+        });
         eventService.addEvent(context.getBodyAsJson(), context.user().principal().getString("_id"), getLocale(context), handleResponse(context));
     }
 
