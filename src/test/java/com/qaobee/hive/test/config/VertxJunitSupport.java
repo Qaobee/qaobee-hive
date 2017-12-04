@@ -80,7 +80,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
     /**
      * The constant LOCALE.
      */
-    private static final String LOCALE = "fr,en-US;q=0.8,en;q=0.6";
+    private static final String LOCALE = "de-DE,en-US;q=0.8,en;q=0.6";
     /**
      * The constant CODE.
      */

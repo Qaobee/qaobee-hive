@@ -46,14 +46,9 @@ public class UserSignupRoute extends AbstractRoute {
      * Parameter ID
      */
     public static final String PARAM_ID = "id";
-    /**
-     * Parameter CODE
-     */
-    public static final String PARAM_CODE = "code";
-    /**
-     * Parameter Login
-     */
-    public static final String PARAM_LOGIN = "login";
+
+    private static final String PARAM_CODE = "code";
+    private static final String PARAM_LOGIN = "login";
     private static final String PARAM_CAPTCHA = "captcha";
     @Inject
     @Named("runtime")
@@ -70,7 +65,7 @@ public class UserSignupRoute extends AbstractRoute {
         Router router = Router.router(vertx);
         addRoute(router, "/test/:login", HttpMethod.GET, this::loginTest);
         addRoute(router, "/register", HttpMethod.PUT,
-                c -> mandatoryHandler.testBodyParams(c, PARAM_CAPTCHA),
+                c -> mandatoryHandler.testBodyParams(c, PARAM_CAPTCHA, "country"),
                 this::registerUser);
 
         addRoute(router, "/accountcheck/:id/:code", HttpMethod.GET, this::accountCheck);
@@ -101,6 +96,7 @@ public class UserSignupRoute extends AbstractRoute {
             }
         });
     }
+
     /**
      * @apiDescription First connection account check
      * @api {get} /api/1/commons/users/signup/firstconnectioncheck/:id/:code Account validation check
@@ -145,7 +141,10 @@ public class UserSignupRoute extends AbstractRoute {
      * @apiError MAIL_EXCEPTION problème d'envoi d'email
      */
     private void registerUser(RoutingContext context) {
-        signupService.register(context.getBodyAsJson().getString(PARAM_CAPTCHA), context.getBodyAsJson(), getLocale(context), u -> {
+        JsonObject userJson = context.getBodyAsJson();
+        String country = userJson.getString("country");
+        userJson.remove("country");
+        signupService.register(context.getBodyAsJson().getString(PARAM_CAPTCHA), userJson, country, getLocale(context), u -> {
             if (u.succeeded()) {
                 JsonObject user = u.result().getJsonObject("person");
                 signupService.sendRegisterMail(user, getLocale(context), r -> {
