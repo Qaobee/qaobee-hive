@@ -27,7 +27,6 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Collect service.
@@ -55,7 +54,7 @@ public interface CollectService {
      * @return the collect service
      */
     static CollectService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(CollectService.class, vertx, address);
+        return new CollectServiceVertxEBProxy(vertx, address);
     }
 
     /**

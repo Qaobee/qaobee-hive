@@ -23,6 +23,7 @@ import com.qaobee.hive.services.CollectService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
@@ -87,7 +88,7 @@ public class SB_CollectRoute extends AbstractRoute {// NOSONAR
         addRoute(router, "/add", HttpMethod.POST,
                 authHandler,
                 c -> mandatoryHandler.testBodyParams(c, PARAM_EVENT, PARAM_PLAYERS),
-                this::addStat);
+                this::add);
 
         addRoute(router, "/update", HttpMethod.POST,
                 authHandler,
@@ -136,7 +137,11 @@ public class SB_CollectRoute extends AbstractRoute {// NOSONAR
      * @apiHeader {String} token
      * @apiSuccess {Object} collect Created collect
      */
-    private void addStat(RoutingContext context) {
+    private void add(RoutingContext context) {
+        JsonObject labels = new JsonObject().put("user_id", context.user().principal().getString("_id"));
+        warp10Service.sendNumber("com.qaobee.mesures.collect", labels, 1, r -> {
+            //empty
+        });
         collectService.add(context.getBodyAsJson(), context.user().principal().getString("_id"), getLocale(context), handleResponse(context));
     }
 

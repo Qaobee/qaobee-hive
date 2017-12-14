@@ -53,6 +53,7 @@ import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.VertxContextPRNG;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,25 +105,25 @@ public class SignupServiceImpl implements SignupService {
         this.vertx = vertx;
     }
 
-    private void checkUserInformations(JsonObject userJson, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+    private void checkUserInformations(JsonObject userJson, String country, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
         final User user = Json.decodeValue(userJson.encode(), User.class);
         // Check user informations
         userService.checkUserInformations(userJson, locale, ar -> {
             if (ar.succeeded()) {
                 // check if email is correct
-                checkMailAndCreateUser(user, userJson, locale, resultHandler);
+                checkMailAndCreateUser(user, userJson, country, locale, resultHandler);
             } else {
                 resultHandler.handle(Future.failedFuture(ar.cause()));
             }
         });
     }
 
-    private void checkMailAndCreateUser(User user, JsonObject userJson, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+    private void checkMailAndCreateUser(User user, JsonObject userJson, String country, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
         userService.testEmail(user.getContact().getEmail(), locale, ar2 -> {
             if (ar2.succeeded()) {
                 userService.existingLogin(user.getAccount().getLogin(), r -> {
                     if (r.succeeded() && !r.result()) {
-                        createUser(user, userJson, locale, resultHandler);
+                        createUser(user, userJson, country, locale, resultHandler);
                     } else {
                         resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.NON_UNIQUE_LOGIN, Messages.getString("login.nonunique", locale))));
                     }
@@ -133,7 +134,7 @@ public class SignupServiceImpl implements SignupService {
         });
     }
 
-    private void createUser(User user, JsonObject userJson, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+    private void createUser(User user, JsonObject userJson, String country, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
         user.getAccount().setToken(VertxContextPRNG.current(vertx).nextString(32));
         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
         user.getAccount().setActive(false);
@@ -167,22 +168,22 @@ public class SignupServiceImpl implements SignupService {
         d.setHandler(res -> {
             if (res.succeeded()) {
                 user.getAccount().getListPlan().add(plan);
-                countryService.getCountryFromAlpha2(locale, c -> {
+                countryService.getCountryFromAlpha2(country, c -> {
                     if (c.succeeded()) {
-                        Country country = Json.decodeValue(c.result().encode(), Country.class);
-                        user.setCountry(country);
+                        Country countryObj = Json.decodeValue(c.result().encode(), Country.class);
+                        user.setCountry(countryObj);
                         // Création Sandbox
                         SB_SandBox sbSandBox = new SB_SandBox();
                         sbSandBox.setActivityId(plan.getActivity().get_id());
                         Structure struc = new Structure();
                         struc.setActivity(plan.getActivity());
-                        struc.setCountry(country);
+                        struc.setCountry(countryObj);
                         sbSandBox.setStructure(struc);
                         upsertNewUser(user, plan, u -> {
                             if (u.succeeded()) {
                                 user.set_id(u.result().getString("_id"));
                                 sbSandBox.setOwner(user.get_id());
-                                createSandBox(plan.getActivity().get_id(), country.get_id(), sbSandBox,
+                                createSandBox(plan.getActivity().get_id(), countryObj.get_id(), sbSandBox,
                                         Json.decodeValue(u.result().encode(), User.class), plan, resultHandler);
                             } else {
                                 resultHandler.handle(Future.failedFuture(u.cause()));
@@ -334,17 +335,21 @@ public class SignupServiceImpl implements SignupService {
     }
 
     @Override
-    public void register(String reCaptchaChallenge, JsonObject userJson, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+    public void register(String reCaptchaChallenge, JsonObject userJson, String country, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+        if(StringUtils.isEmpty(country)) {
+            country = locale;
+        }
         if (runtime.getBoolean("recaptcha") && !"mobile".equals(userJson.getJsonObject("account").getString("origin", "web"))) {
+            String finalCountry = country;
             reCaptcha.verify(reCaptchaChallenge, res -> {
                 if (res.succeeded()) {
-                    checkUserInformations(userJson, locale, resultHandler);
+                    checkUserInformations(userJson, finalCountry, locale, resultHandler);
                 } else {
                     resultHandler.handle(Future.failedFuture(res.cause()));
                 }
             });
         } else {
-            checkUserInformations(userJson, locale, resultHandler);
+            checkUserInformations(userJson, country, locale, resultHandler);
         }
     }
 
@@ -514,7 +519,8 @@ public class SignupServiceImpl implements SignupService {
                         if (tabParametersSignup.result().size() > 0) {
                             createPlayers(tabParametersSignup.result(), sbSandBox, user, plan, resultHandler);
                         } else {
-                            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "No config for your country " + countryId)));
+                            createSandBox(activityId, "CNTR-250-FR-FRA", sbSandBox, user, plan, resultHandler);
+                            // resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "No config for your country " + countryId)));
                         }
                     } else {
                         resultHandler.handle(Future.failedFuture(tabParametersSignup.cause()));

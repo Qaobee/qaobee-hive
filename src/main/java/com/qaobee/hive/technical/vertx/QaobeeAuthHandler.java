@@ -1,6 +1,7 @@
 package com.qaobee.hive.technical.vertx;
 
 import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.dao.Utils;
 import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;

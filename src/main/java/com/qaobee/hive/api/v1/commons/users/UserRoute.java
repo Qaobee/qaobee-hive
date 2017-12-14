@@ -205,7 +205,7 @@ public class UserRoute extends AbstractRoute {
      * @apiHeader {String} token
      */
     private void userByLogin(RoutingContext context) {
-        userService.getUserByLogin(context.request().getParam("login"), getLocale(context), handleResponse(context));
+        userService.getUserByLogin(context.request().getParam(PARAM_LOGIN), getLocale(context), handleResponse(context));
     }
 
     /**

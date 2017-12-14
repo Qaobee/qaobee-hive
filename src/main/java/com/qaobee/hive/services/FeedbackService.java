@@ -26,7 +26,6 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Feedback dao.
@@ -56,7 +55,7 @@ public interface FeedbackService {
      * @return the feedback service
      */
     static FeedbackService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(FeedbackService.class, vertx, address);
+        return new FeedbackServiceVertxEBProxy(vertx, address);
     }
 
     /**

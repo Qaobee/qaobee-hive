@@ -28,7 +28,6 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Statistics service.
@@ -57,7 +56,7 @@ public interface StatisticsService {
      * @return the statistics service
      */
     static StatisticsService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(StatisticsService.class, vertx, address);
+        return new StatisticsServiceVertxEBProxy(vertx, address);
     }
 
     /**

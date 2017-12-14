@@ -190,19 +190,19 @@ public class SB_StatsTest extends VertxJunitSupport {
                     .when().put(BASE_URL + "/add")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
-                    .body("owner", is(user.result().get_id()));
+                    .body("owner", hasItems(user.result().get_id()));
             given().header(TOKEN, user.result().getAccount().getToken())
                     .body(generateStat(user.result(), "originShootAtt", 1, "CENTER9").encode())
                     .when().put(BASE_URL + "/add")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
-                    .body("owner", is(user.result().get_id()));
+                    .body("owner", hasItems(user.result().get_id()));
             given().header(TOKEN, user.result().getAccount().getToken())
                     .body(generateStat(user.result(), "originShootAtt", 1, "CENTER9").encode())
                     .when().put(BASE_URL + "/add")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
-                    .body("owner", is(user.result().get_id()));
+                    .body("owner", hasItems(user.result().get_id()));
 
 
             given().header(TOKEN, user.result().getAccount().getToken())
@@ -210,19 +210,19 @@ public class SB_StatsTest extends VertxJunitSupport {
                     .when().put(BASE_URL + "/add")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
-                    .body("owner", is(user.result().get_id()));
+                    .body("owner", hasItems(user.result().get_id()));
             given().header(TOKEN, user.result().getAccount().getToken())
                     .body(generateStat(user.result(), "fake", 1, 3).encode())
                     .when().put(BASE_URL + "/add")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
-                    .body("owner", is(user.result().get_id()));
+                    .body("owner", hasItems(user.result().get_id()));
             given().header(TOKEN, user.result().getAccount().getToken())
                     .body(generateStat(user.result(), "fake", 1, 10).encode())
                     .when().put(BASE_URL + "/add")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
-                    .body("owner", is(user.result().get_id()));
+                    .body("owner", hasItems(user.result().get_id()));
 
 
             final JsonObject params = new JsonObject()
@@ -357,7 +357,7 @@ public class SB_StatsTest extends VertxJunitSupport {
                     .when().put(BASE_URL + "/add")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
-                    .body("owner", is(user.result().get_id()));
+                    .body("owner", hasItems(user.result().get_id()));
 
             final JsonObject params = new JsonObject()
                     .put(PARAM_START_DATE, 1443650400000L)
@@ -392,7 +392,7 @@ public class SB_StatsTest extends VertxJunitSupport {
                     .when().put(BASE_URL + "/add")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
-                    .body("owner", is(user.result().get_id()));
+                    .body("owner", hasItems(user.result().get_id()));
 
             final JsonObject params = new JsonObject()
                     .put(PARAM_START_DATE, 1443650400000L)
@@ -541,7 +541,7 @@ public class SB_StatsTest extends VertxJunitSupport {
                 .put("eventId", "12345")
                 .put("shootSeqId", "12345")
                 .put("code", indicator)
-                .put("owner", u.get_id())
+                .put("owner",new JsonArray().add(u.get_id()))
                 .put("producter", new JsonArray().add(u.get_id()));
     }
 
@@ -564,7 +564,7 @@ public class SB_StatsTest extends VertxJunitSupport {
                 .put("eventId", "12345")
                 .put("shootSeqId", "12345")
                 .put("code", indicator)
-                .put("owner", u.get_id())
+                .put("owner", new JsonArray().add(u.get_id()))
                 .put("producter", new JsonArray().add(u.get_id()));
     }
 

@@ -21,6 +21,7 @@ package com.qaobee.hive.services.impl;
 
 import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.services.StatisticsService;
+import com.qaobee.hive.services.Warp10Service;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.mongo.CriteriaOption;
@@ -50,6 +51,8 @@ public class StatisticsServiceImpl implements StatisticsService {
     private static final String STAT_FIELD = "stats";
     @Inject
     private MongoDB mongo;
+    @Inject
+    private Warp10Service warp10Service;
 
     /**
      * Instantiates a new Statistics service.
@@ -178,9 +181,27 @@ public class StatisticsServiceImpl implements StatisticsService {
         if (!stat.containsKey(TIMER_FIELD) || Integer.valueOf(0).equals(stat.getInteger(TIMER_FIELD))) {
             stat.put(TIMER_FIELD, System.currentTimeMillis());
         }
+        JsonObject labels = new JsonObject()
+                .put("user_id", stat.getJsonArray("producter").getString(0))
+                .put("owners", stat.getJsonArray("owner").toString())
+                .put("event_id", stat.getString("eventId"));
+
+        try {
+            warp10Service.sendStringWithTS(stat.getLong(TIMER_FIELD), "com.qaobee.stat." + stat.getString("code") + ".value", labels, stat.getString("value"), r -> {
+                //empty
+            });
+        } catch (ClassCastException e) {
+            warp10Service.sendNumberWithTS(stat.getLong(TIMER_FIELD), "com.qaobee.stat." + stat.getString("code") + ".value", labels, stat.getDouble("value"), r -> {
+                //empty
+            });
+        }
+        warp10Service.sendNumberWithTS(stat.getLong(TIMER_FIELD), "com.qaobee.stat." + stat.getString("code") + ".chrono", labels, stat.getDouble("chrono"), r -> {
+            //empty
+        });
         mongo.upsert(stat, DBCollections.STATS, upsertRes -> {
             if (upsertRes.succeeded()) {
                 stat.put("_id", upsertRes.result());
+
                 resultHandler.handle(Future.succeededFuture(stat));
             } else {
                 resultHandler.handle(Future.failedFuture(upsertRes.cause()));

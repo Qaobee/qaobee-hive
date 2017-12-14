@@ -24,6 +24,7 @@ import com.qaobee.hive.services.EffectiveService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
@@ -87,6 +88,10 @@ public class SB_EffectiveRoute extends AbstractRoute {// NOSONAR
      * @apiHeader {String} token
      */
     private void addEffective(RoutingContext context) {
+        JsonObject labels = new JsonObject().put("user_id", context.user().principal().getString("_id"));
+        warp10Service.sendNumber("com.qaobee.mesures.effective", labels, 1, r -> {
+            //empty
+        });
         effectiveService.add(context.getBodyAsJson(), handleResponse(context));
     }
 
@@ -117,7 +122,7 @@ public class SB_EffectiveRoute extends AbstractRoute {// NOSONAR
      */
     private void getEffectiveList(RoutingContext context) {
         String categoryAgeCode = "";
-        if (context.request().params().contains(PARAM_CATEGORY_AGE_CODE)&& StringUtils.isNotBlank(context.request().getParam(PARAM_CATEGORY_AGE_CODE))) {
+        if (context.request().params().contains(PARAM_CATEGORY_AGE_CODE) && StringUtils.isNotBlank(context.request().getParam(PARAM_CATEGORY_AGE_CODE))) {
             categoryAgeCode = context.request().getParam(PARAM_CATEGORY_AGE_CODE);
         }
         effectiveService.getEffectiveList(context.request().getParam(PARAM_SANDBOX_ID), categoryAgeCode, handleResponseArray(context));

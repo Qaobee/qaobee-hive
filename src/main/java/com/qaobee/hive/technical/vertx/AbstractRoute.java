@@ -1,10 +1,11 @@
 package com.qaobee.hive.technical.vertx;
 
+import com.qaobee.hive.dao.Utils;
+import com.qaobee.hive.services.Warp10Service;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.dao.Utils;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -38,6 +39,9 @@ public abstract class AbstractRoute implements VertxRoute.Route {
      */
     @Inject
     protected AuthHandler authHandler;
+    /**
+     * The Role handler.
+     */
     @Inject
     protected RoleHandler roleHandler;
     /**
@@ -45,13 +49,17 @@ public abstract class AbstractRoute implements VertxRoute.Route {
      */
     @Inject
     protected MandatoryHandler mandatoryHandler;
+    /**
+     * The Warp 10 service.
+     */
+    @Inject
+    protected Warp10Service warp10Service;
 
 
     /**
      * Handle response handler.
      *
      * @param context the context
-     *
      * @return the handler
      */
     protected Handler<AsyncResult<JsonObject>> handleResponse(RoutingContext context) {
@@ -72,7 +80,6 @@ public abstract class AbstractRoute implements VertxRoute.Route {
      * Handle response array handler.
      *
      * @param context the context
-     *
      * @return the handler
      */
     protected Handler<AsyncResult<JsonArray>> handleResponseArray(RoutingContext context) {
@@ -126,7 +133,6 @@ public abstract class AbstractRoute implements VertxRoute.Route {
      * Gets locale.
      *
      * @param context the context
-     *
      * @return the locale
      */
     protected String getLocale(RoutingContext context) {

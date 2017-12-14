@@ -32,11 +32,11 @@
 
 
 db.Country.remove({"local" : "fr"});
-db.Country.insert({"_id" : "CNTR-4-AF-AFG" , "codeOSCE" : NumberInt(4) , "label" : "Afghanistan" , "local" : "fr"});
-db.Country.insert({"_id" : "CNTR-8-AL-ALB" , "codeOSCE" : NumberInt(8) , "label" : "Albanie" , "local" : "fr"});
+db.Country.insert({"_id" : "CNTR-4-AF-AFG" , "codeOSCE" : NumberInt(4) , "label" : "Afghanestan" , "local" : "fr"});
+db.Country.insert({"_id" : "CNTR-8-AL-ALB" , "codeOSCE" : NumberInt(8) , "label" : "Shqipëri" , "local" : "fr"});
 db.Country.insert({"_id" : "CNTR-12-DZ-DZA" , "codeOSCE" : NumberInt(12) , "label" : "Algérie" , "local" : "fr"});
-db.Country.insert({"_id" : "CNTR-16-AS-ASM" , "codeOSCE" : NumberInt(16) , "label" : "Samoa Américaines" , "local" : "fr"});
-db.Country.insert({"_id" : "CNTR-20-AD-AND" , "codeOSCE" : NumberInt(20) , "label" : "Andorre" , "local" : "fr"});
+db.Country.insert({"_id" : "CNTR-16-AS-ASM" , "codeOSCE" : NumberInt(16) , "label" : "Samoa" , "local" : "fr"});
+db.Country.insert({"_id" : "CNTR-20-AD-AND" , "codeOSCE" : NumberInt(20) , "label" : "Andorra" , "local" : "fr"});
 db.Country.insert({"_id" : "CNTR-24-AO-AGO" , "codeOSCE" : NumberInt(24) , "label" : "Angola" , "local" : "fr"});
 db.Country.insert({"_id" : "CNTR-28-AG-ATG" , "codeOSCE" : NumberInt(28) , "label" : "Antigua-et-Barbuda" , "local" : "fr"});
 db.Country.insert({"_id" : "CNTR-31-AZ-AZE" , "codeOSCE" : NumberInt(31) , "label" : "Azerbaïdjan" , "local" : "fr"});

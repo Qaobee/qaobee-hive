@@ -151,6 +151,10 @@ public class SB_PersonRoute extends AbstractRoute {// NOSONAR
      * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      */
     private void addPerson(RoutingContext context) {
+        JsonObject labels = new JsonObject().put("user_id", context.user().principal().getString("_id"));
+        warp10Service.sendNumber("com.qaobee.mesures.person", labels, 1, r -> {
+            //empty
+        });
         personService.addPerson(context.getBodyAsJson().getJsonObject("person"), context.user().principal().getString("_id"), getLocale(context), handleResponse(context));
     }
 }

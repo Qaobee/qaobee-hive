@@ -27,7 +27,6 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Person service.
@@ -56,7 +55,7 @@ public interface PersonService {
      * @return the person service
      */
     static PersonService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(PersonService.class, vertx, address);
+        return new PersonServiceVertxEBProxy(vertx, address);
     }
 
     /**

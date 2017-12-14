@@ -27,7 +27,6 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Activity cfg service.
@@ -54,7 +53,7 @@ public interface ActivityCfgService {
      * @return the activity cfg service
      */
     static ActivityCfgService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(ActivityCfgService.class, vertx, address);
+        return new ActivityCfgServiceVertxEBProxy(vertx, address);
     }
 
     /**

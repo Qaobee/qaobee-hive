@@ -27,7 +27,6 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 import java.util.List;
 
@@ -58,7 +57,7 @@ public interface SandBoxService {
      * @return the sand box service
      */
     static SandBoxService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(SandBoxService.class, vertx, address);
+        return new SandBoxServiceVertxEBProxy(vertx, address);
     }
 
     /**

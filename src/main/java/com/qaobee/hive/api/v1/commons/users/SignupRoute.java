@@ -80,7 +80,7 @@ public class SignupRoute extends AbstractRoute {
                 this::loginTest);
 
         addRoute(router, "/register", HttpMethod.PUT,
-                c -> mandatoryHandler.testBodyParams(c, PARAM_CAPTCHA),
+                c -> mandatoryHandler.testBodyParams(c, PARAM_CAPTCHA, "country"),
                 this::registerUser);
 
         addRoute(router, "/accountcheck", HttpMethod.GET,
@@ -182,7 +182,10 @@ public class SignupRoute extends AbstractRoute {
      * @apiError MAIL_EXCEPTION problème d'envoi d'email
      */
     private void registerUser(RoutingContext context) {
-        signupService.register(context.getBodyAsJson().getString(PARAM_CAPTCHA), context.getBodyAsJson(), getLocale(context), handleResponse(context));
+        JsonObject u = context.getBodyAsJson();
+        String country = u.getString("country");
+        u.remove("country");
+        signupService.register(context.getBodyAsJson().getString(PARAM_CAPTCHA), u, country, getLocale(context), handleResponse(context));
     }
 
     /**

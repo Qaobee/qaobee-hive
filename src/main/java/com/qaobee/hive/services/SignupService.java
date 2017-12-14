@@ -26,7 +26,6 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Signup dao.
@@ -53,7 +52,7 @@ public interface SignupService {
      * @return the signup service
      */
     static SignupService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(SignupService.class, vertx, address);
+        return new SignupServiceVertxEBProxy(vertx, address);
     }
 
     /**
@@ -81,9 +80,10 @@ public interface SignupService {
      * @param reCaptchaChallenge the re captcha challenge
      * @param user               the user
      * @param locale             the locale
+     * @param country            the country
      * @param resultHandler      the result handler
      */
-    void register(String reCaptchaChallenge, JsonObject user, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
+    void register(String reCaptchaChallenge, JsonObject user, String locale, String country, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
      * Resend mail.

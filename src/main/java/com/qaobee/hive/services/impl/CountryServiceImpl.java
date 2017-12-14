@@ -54,8 +54,8 @@ public class CountryServiceImpl implements CountryService {
     public void getCountryFromAlpha2(String alpha2, Handler<AsyncResult<JsonObject>> resultHandler) {
         getCountries(map -> {
             if (map.succeeded()) {
-                if (map.result().containsKey(alpha2.toUpperCase().substring(alpha2.length()-2, alpha2.length()))) {
-                    resultHandler.handle(Future.succeededFuture(map.result().getJsonObject(alpha2.toUpperCase().substring(alpha2.length()-2, alpha2.length()))));
+                if (map.result().containsKey(alpha2.toUpperCase().substring(0, 2))) {
+                    resultHandler.handle(Future.succeededFuture(map.result().getJsonObject(alpha2.toUpperCase().substring(0,2))));
                 } else {
                     resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "no data found with " + alpha2)));
                 }

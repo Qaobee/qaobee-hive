@@ -4,7 +4,7 @@ import com.google.inject.Injector;
 import io.vertx.core.Vertx;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import io.vertx.serviceproxy.ProxyHelper;
+import io.vertx.serviceproxy.ServiceBinder;
 import org.reflections.Reflections;
 
 import java.lang.annotation.Retention;
@@ -54,8 +54,11 @@ public @interface ProxyService {
                     Object r = rit.getConstructor(Vertx.class).newInstance(vertx);
                     LOG.debug("Getting service : " + rit.getCanonicalName() + " -> " + r.getClass().getAnnotation(ProxyService.class).address());
                     injector.injectMembers(r);
-                    ProxyHelper.registerService(r.getClass().getAnnotation(ProxyService.class).iface(),
-                            vertx, r, r.getClass().getAnnotation(ProxyService.class).address(), true, 5);
+                    new ServiceBinder(vertx)
+                            .setAddress(r.getClass().getAnnotation(ProxyService.class).address())
+                            .register(r.getClass().getAnnotation(ProxyService.class).iface(), r);
+                  /*  ProxyHelper.registerService(r.getClass().getAnnotation(ProxyService.class).iface(),
+                            vertx, r, r.getClass().getAnnotation(ProxyService.class).address(), true, 5);*/
                 } catch (InstantiationException | IllegalAccessException | NoSuchMethodException
                         | InvocationTargetException e) {
                     LOG.error(e.getMessage(), e);

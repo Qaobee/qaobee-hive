@@ -27,7 +27,6 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Country service.
@@ -54,7 +53,7 @@ public interface CountryService {
      * @return the country service
      */
     static CountryService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(CountryService.class, vertx, address);
+        return new CountryServiceVertxEBProxy(vertx, address);
     }
 
     /**

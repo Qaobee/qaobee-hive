@@ -26,7 +26,6 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Shipping service.
@@ -53,7 +52,7 @@ public interface ShippingService {
      * @return the shipping service
      */
     static ShippingService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(ShippingService.class, vertx, address);
+        return new ShippingServiceVertxEBProxy(vertx, address);
     }
 
     /**

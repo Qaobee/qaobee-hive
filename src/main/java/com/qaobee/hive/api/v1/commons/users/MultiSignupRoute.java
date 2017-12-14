@@ -65,7 +65,10 @@ public class MultiSignupRoute extends AbstractSignup {
      * @apiError MAIL_EXCEPTION problème d'envoi d'email
      */
     private void registerMulti(RoutingContext context) {
-        signupService.register(context.getBodyAsJson().getJsonObject("user").getString(PARAM_CAPTCHA, ""), context.getBodyAsJson().getJsonObject("user"), getLocale(context), u -> {
+        JsonObject userJson = context.getBodyAsJson().getJsonObject("user");
+        String country = userJson.getString("country");
+        userJson.remove("country");
+        signupService.register(userJson.getString(PARAM_CAPTCHA, ""), userJson, country, getLocale(context), u -> {
             if (u.succeeded()) {
                 JsonObject user = u.result().getJsonObject("person");
                 JsonObject structure = context.getBodyAsJson().getJsonObject("structure");

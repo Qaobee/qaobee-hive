@@ -25,6 +25,7 @@ import com.qaobee.hive.business.model.commons.users.account.Card;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.dao.MailUtils;
 import com.qaobee.hive.dao.TemplatesDAO;
+import com.qaobee.hive.dao.Utils;
 import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
 import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.services.NotificationsService;

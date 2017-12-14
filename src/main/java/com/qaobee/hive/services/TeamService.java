@@ -27,7 +27,6 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Team service.
@@ -56,7 +55,7 @@ public interface TeamService {
      * @return the team service
      */
     static TeamService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(TeamService.class, vertx, address);
+        return new TeamServiceVertxEBProxy(vertx, address);
     }
 
     /**

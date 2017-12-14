@@ -7,7 +7,6 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Assets service.
@@ -34,7 +33,7 @@ public interface AssetsService {
      * @return the assets service
      */
     static AssetsService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(AssetsService.class, vertx, address);
+        return new AssetsServiceVertxEBProxy(vertx, address);
     }
 
     /**
