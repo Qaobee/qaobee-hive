@@ -25,7 +25,6 @@ import com.qaobee.hive.business.model.commons.users.account.Card;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.dao.MailUtils;
 import com.qaobee.hive.dao.TemplatesDAO;
-import com.qaobee.hive.dao.Utils;
 import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
 import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.services.NotificationsService;
@@ -143,7 +142,7 @@ public class ShippingServiceImpl implements ShippingService {
             if (token != null) {
                 Map<String, Object> params = new HashMap<>();
                 params.put("customer", customer.getId());
-                if(yearly) {
+                if (yearly) {
                     params.put("plan", plan.getLevelPlan().name() + "_Y");
                 } else {
                     params.put("plan", plan.getLevelPlan().name());
@@ -283,9 +282,9 @@ public class ShippingServiceImpl implements ShippingService {
                     .put(Constants.STATUS, subscription.getString("status"));
 
             Calendar gc = GregorianCalendar.getInstance();
-            if("month".equals(subscription.getJsonObject("plan").getString("interval"))) {
+            if ("month".equals(subscription.getJsonObject("plan").getString("interval"))) {
                 gc.add(Calendar.MONTH, 1);
-            } else if("year".equals(subscription.getJsonObject("plan").getString("interval"))) {
+            } else if ("year".equals(subscription.getJsonObject("plan").getString("interval"))) {
                 gc.add(Calendar.YEAR, 1);
             }
             user.getJsonObject(ACCOUNT_FIELD).getJsonArray(LIST_PLAN_FIELD).getJsonObject(planId)
@@ -296,11 +295,11 @@ public class ShippingServiceImpl implements ShippingService {
 
                         final JsonObject tplReq = new JsonObject()
                                 .put(TemplatesDAOImpl.TEMPLATE, "payment.html");
-                        if("active".equals(subscription.getString("status"))) {
+                        if ("active".equals(subscription.getString("status"))) {
 
-                            tplReq .put(TemplatesDAOImpl.DATA, mailUtils.generatePaymentBody(u,
-                                        subscription.getJsonObject(METADATA_FIELD).getString(LOCALE_FIELD),
-                                        u.getAccount().getListPlan().get(planId)));
+                            tplReq.put(TemplatesDAOImpl.DATA, mailUtils.generatePaymentBody(u,
+                                    subscription.getJsonObject(METADATA_FIELD).getString(LOCALE_FIELD),
+                                    u.getAccount().getListPlan().get(planId)));
                             final String tplRes = templatesDAO.generateMail(tplReq).getString("result");
                             final JsonObject emailReq = new JsonObject()
                                     .put("from", runtime.getString("mail.from"))
@@ -311,10 +310,10 @@ public class ShippingServiceImpl implements ShippingService {
                                     .put("body", tplRes);
                             vertx.eventBus().publish(MailVerticle.INTERNAL_MAIL, emailReq);
                         }
-                        if("canceled".equals(subscription.getString("status"))) {
+                        if ("canceled".equals(subscription.getString("status"))) {
                             tplReq.put(TemplatesDAOImpl.DATA, mailUtils.generatePaymentCanceledBody(u,
-                                        subscription.getJsonObject(METADATA_FIELD).getString(LOCALE_FIELD),
-                                        u.getAccount().getListPlan().get(planId)));
+                                    subscription.getJsonObject(METADATA_FIELD).getString(LOCALE_FIELD),
+                                    u.getAccount().getListPlan().get(planId)));
                             final String tplRes = templatesDAO.generateMail(tplReq).getString("result");
                             final JsonObject emailReq = new JsonObject()
                                     .put("from", runtime.getString("mail.from"))
@@ -419,9 +418,10 @@ public class ShippingServiceImpl implements ShippingService {
     @Override
     public void webHook(JsonObject body, Handler<AsyncResult<Boolean>> resultHandler) {
         try {
-            LOG.info(body.getString("type") + " : " + body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getString("status"));
+            LOG.info(body.getString("type") + " : " + (body.getJsonObject("data") != null ? body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getString("status") : ""));
             if (body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject(METADATA_FIELD).containsKey(PLANID_FIELD)) {
                 int planId = Integer.parseInt(body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject(METADATA_FIELD).getString(PLANID_FIELD));
+                Stripe.apiKey = stripe.getString("api_secret"); // NOSONAR
                 Customer customer = Customer.retrieve(body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getString("customer"));
                 mongo.getById(customer.getMetadata().get("_id"), DBCollections.USER, res -> {
                     if (res.succeeded()) {
@@ -441,6 +441,7 @@ public class ShippingServiceImpl implements ShippingService {
                 resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "planId is mandatory")));
             }
         } catch (NumberFormatException | StripeException e) {
+            e.printStackTrace();
             resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, e)));
         }
     }

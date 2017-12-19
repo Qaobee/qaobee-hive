@@ -24,7 +24,6 @@ import com.qaobee.hive.services.ShippingService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
@@ -52,7 +51,6 @@ public class ShippingRoute extends AbstractRoute {
                 this::unsubscribe);
 
         addRoute(router, "/webHook", HttpMethod.POST,
-                c -> mandatoryHandler.testBodyParams(c, "id", "created"),
                 this::webHook);
 
         return router;

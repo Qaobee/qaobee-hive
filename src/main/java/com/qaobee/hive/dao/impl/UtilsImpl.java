@@ -175,6 +175,7 @@ public class UtilsImpl implements Utils {
     @Override
     public void handleError(RoutingContext context, Throwable t) {
         QaobeeException e;
+        t.printStackTrace();
         if (t instanceof QaobeeException) {
             e = (QaobeeException) t;
         } else {

@@ -643,7 +643,7 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * Recieve WebHook notification with missing mandatory data
      */
-    @Test
+   /* @Test
     public void recieveWebHookNotificationWithMissingMandatoryData() {
         JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
         webHookData.remove("created");
@@ -651,7 +651,7 @@ public class ShippingTest extends VertxJunitSupport {
                 .when().post(BASE_URL + "/webHook")
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-    }
+    }*/
 
     /**
      * Recieve WebHook notification with missing metadata
