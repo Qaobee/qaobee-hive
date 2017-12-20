@@ -73,7 +73,7 @@ public final class Messages {
                 return ResourceBundle.getBundle(BUNDLE_NAME, Locale.forLanguageTag(locale.split(",")[0])).getString(key);
             }
         } catch (final MissingResourceException e) {
-            LOG.warn(e.getMessage(), e);
+            LOG.warn(e.getMessage());
             return '!' + key + '!';
         }
     }

@@ -53,10 +53,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @ProxyService(address = "vertx.Shipping.service", iface = ShippingService.class)
 public class ShippingServiceImpl implements ShippingService {
@@ -419,20 +416,31 @@ public class ShippingServiceImpl implements ShippingService {
     public void webHook(JsonObject body, Handler<AsyncResult<Boolean>> resultHandler) {
         try {
             LOG.info(body.getString("type") + " : " + (body.getJsonObject("data") != null ? body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getString("status") : ""));
+            int planId = -1;
+
             if (body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject(METADATA_FIELD).containsKey(PLANID_FIELD)) {
-                int planId = Integer.parseInt(body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject(METADATA_FIELD).getString(PLANID_FIELD));
+                planId = Integer.parseInt(body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject(METADATA_FIELD).getString(PLANID_FIELD));
+            } else if (body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject("lines").getJsonArray("data").getJsonObject(0).getJsonObject(METADATA_FIELD).containsKey(PLANID_FIELD)) {
+                planId = Integer.parseInt(body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject("lines").getJsonArray("data").getJsonObject(0).getJsonObject(METADATA_FIELD).getString(PLANID_FIELD));
+            }
+            if (planId != -1) {
                 Stripe.apiKey = stripe.getString("api_secret"); // NOSONAR
                 Customer customer = Customer.retrieve(body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getString("customer"));
+                int finalPlanId = planId;
                 mongo.getById(customer.getMetadata().get("_id"), DBCollections.USER, res -> {
                     if (res.succeeded()) {
                         final User u = Json.decodeValue(res.result().encode(), User.class);
-                        notificationsService.addNotificationToUser(res.result().getString("_id"), new JsonObject()
-                                .put("content", Messages.getString("notification." + body.getString("type") + ".content", customer.getMetadata().get(LOCALE_FIELD)))
-                                .put("title", Messages.getString("notification." + body.getString("type") + ".title", customer.getMetadata().get(LOCALE_FIELD)))
-                                .put("senderId", runtime.getString("admin.id")), ar -> {
-                            // empty
-                        });
-                        registerPayment(body.getJsonObject("data").getJsonObject(OBJECT_FIELD), res.result(), u, planId, resultHandler);
+                            String message = Messages.getString("notification." + body.getString("type") + ".content", customer.getMetadata().get(LOCALE_FIELD));
+                            if(!("!notification." + body.getString("type") + ".content!").equals(message)) {
+                                notificationsService.addNotificationToUser(res.result().getString("_id"), new JsonObject()
+                                        .put("content", message)
+                                        .put("title", Messages.getString("notification." + body.getString("type") + ".title", customer.getMetadata().get(LOCALE_FIELD)))
+                                        .put("senderId", runtime.getString("admin.id")), ar -> {
+                                    // empty
+                                });
+                                registerPayment(body.getJsonObject("data").getJsonObject(OBJECT_FIELD), res.result(), u, finalPlanId, resultHandler);
+                            }
+                        resultHandler.handle(Future.succeededFuture(true));
                     } else {
                         resultHandler.handle(Future.failedFuture(res.cause()));
                     }
