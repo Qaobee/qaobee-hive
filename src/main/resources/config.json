@@ -22,7 +22,7 @@
         "FREEMIUM": {
           "price": 8,
           "price_y": 87
-        },
+        }/*,
         "TEAMS": {
           "price": 30,
           "price_y": 324
@@ -34,7 +34,7 @@
         "TEAMXL": {
           "price": 48,
           "price_y": 486
-        }
+        }*/
       }
     },
     "cors": {
@@ -219,7 +219,7 @@
         "FREEMIUM": {
           "price": 8,
           "price_y": 87
-        },
+        }/*,
         "TEAMS": {
           "price": 30,
           "price_y": 324
@@ -231,7 +231,7 @@
         "TEAMXL": {
           "price": 48,
           "price_y": 486
-        }
+        }*/
       }
     },
     "cors": {
