@@ -420,7 +420,7 @@ public class ShippingServiceImpl implements ShippingService {
 
             if (body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject(METADATA_FIELD).containsKey(PLANID_FIELD)) {
                 planId = Integer.parseInt(body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject(METADATA_FIELD).getString(PLANID_FIELD));
-            } else if (body.getJsonObject("data").containsKey("lines")
+            } else if (body.getJsonObject("data").getJsonObject(OBJECT_FIELD).containsKey("lines")
                     && body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject("lines").getJsonArray("data").size() > 0
                     && body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject("lines").getJsonArray("data").getJsonObject(0).getJsonObject(METADATA_FIELD).containsKey(PLANID_FIELD)) {
                 planId = Integer.parseInt(body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject("lines").getJsonArray("data").getJsonObject(0).getJsonObject(METADATA_FIELD).getString(PLANID_FIELD));
