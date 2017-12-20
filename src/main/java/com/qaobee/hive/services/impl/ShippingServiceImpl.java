@@ -420,7 +420,9 @@ public class ShippingServiceImpl implements ShippingService {
 
             if (body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject(METADATA_FIELD).containsKey(PLANID_FIELD)) {
                 planId = Integer.parseInt(body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject(METADATA_FIELD).getString(PLANID_FIELD));
-            } else if (body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject("lines").getJsonArray("data").getJsonObject(0).getJsonObject(METADATA_FIELD).containsKey(PLANID_FIELD)) {
+            } else if (body.getJsonObject("data").containsKey("lines")
+                    && body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject("lines").getJsonArray("data").size() > 0
+                    && body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject("lines").getJsonArray("data").getJsonObject(0).getJsonObject(METADATA_FIELD).containsKey(PLANID_FIELD)) {
                 planId = Integer.parseInt(body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getJsonObject("lines").getJsonArray("data").getJsonObject(0).getJsonObject(METADATA_FIELD).getString(PLANID_FIELD));
             }
             if (planId != -1) {
@@ -430,16 +432,16 @@ public class ShippingServiceImpl implements ShippingService {
                 mongo.getById(customer.getMetadata().get("_id"), DBCollections.USER, res -> {
                     if (res.succeeded()) {
                         final User u = Json.decodeValue(res.result().encode(), User.class);
-                            String message = Messages.getString("notification." + body.getString("type") + ".content", customer.getMetadata().get(LOCALE_FIELD));
-                            if(!("!notification." + body.getString("type") + ".content!").equals(message)) {
-                                notificationsService.addNotificationToUser(res.result().getString("_id"), new JsonObject()
-                                        .put("content", message)
-                                        .put("title", Messages.getString("notification." + body.getString("type") + ".title", customer.getMetadata().get(LOCALE_FIELD)))
-                                        .put("senderId", runtime.getString("admin.id")), ar -> {
-                                    // empty
-                                });
-                                registerPayment(body.getJsonObject("data").getJsonObject(OBJECT_FIELD), res.result(), u, finalPlanId, resultHandler);
-                            }
+                        String message = Messages.getString("notification." + body.getString("type") + ".content", customer.getMetadata().get(LOCALE_FIELD));
+                        if (!("!notification." + body.getString("type") + ".content!").equals(message)) {
+                            notificationsService.addNotificationToUser(res.result().getString("_id"), new JsonObject()
+                                    .put("content", message)
+                                    .put("title", Messages.getString("notification." + body.getString("type") + ".title", customer.getMetadata().get(LOCALE_FIELD)))
+                                    .put("senderId", runtime.getString("admin.id")), ar -> {
+                                // empty
+                            });
+                            registerPayment(body.getJsonObject("data").getJsonObject(OBJECT_FIELD), res.result(), u, finalPlanId, resultHandler);
+                        }
                         resultHandler.handle(Future.succeededFuture(true));
                     } else {
                         resultHandler.handle(Future.failedFuture(res.cause()));
