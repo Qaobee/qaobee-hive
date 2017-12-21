@@ -53,11 +53,18 @@ public class ShippingRoute extends AbstractRoute {
         addRoute(router, "/webHook", HttpMethod.POST,
                 this::webHook);
 
+        addRoute(router, "/invoices/:planid", HttpMethod.GET,
+                authHandler,
+                this::getInvoices);
         return router;
     }
 
     private void unsubscribe(RoutingContext context) {
         shippingService.unsubscribe(context.user().principal(), Integer.parseInt(context.request().getParam("id")), getLocale(context), handleResponse(context));
+    }
+
+    private void getInvoices(RoutingContext context) {
+        shippingService.getInvoices(context.user().principal(), Integer.parseInt(context.request().getParam("planid")), handleResponseArray(context));
     }
 
     /**

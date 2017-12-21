@@ -38,14 +38,14 @@ import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.verticles.MailVerticle;
 import com.stripe.Stripe;
 import com.stripe.exception.*;
-import com.stripe.model.Customer;
-import com.stripe.model.Subscription;
-import com.stripe.model.Token;
+import com.stripe.model.*;
+import com.stripe.net.RequestOptions;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -53,7 +53,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 @ProxyService(address = "vertx.Shipping.service", iface = ShippingService.class)
 public class ShippingServiceImpl implements ShippingService {
@@ -451,6 +454,22 @@ public class ShippingServiceImpl implements ShippingService {
                 resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "planId is mandatory")));
             }
         } catch (NumberFormatException | StripeException e) {
+            e.printStackTrace();
+            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, e)));
+        }
+    }
+
+    @Override
+    public void getInvoices(JsonObject user, int planId, Handler<AsyncResult<JsonArray>> resultHandler) {
+        RequestOptions requestOptions = (new RequestOptions.RequestOptionsBuilder()).setApiKey(stripe.getString("api_secret")).build(); // NOSONAR
+        try {
+            String customerId = user.getJsonObject("account").getJsonArray("listPlan").getJsonObject(planId).getString("cardId");
+            Map<String, Object> invoiceParams = new HashMap<>();
+            invoiceParams.put("customer", customerId);
+            JsonArray invoices = new JsonArray();
+            Invoice.list(invoiceParams, requestOptions).getData().forEach(invoice -> invoices.add(new JsonObject(Json.encode(invoice))));
+            resultHandler.handle(Future.succeededFuture(invoices));
+        } catch (AuthenticationException | InvalidRequestException | APIConnectionException | APIException | CardException e) {
             e.printStackTrace();
             resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, e)));
         }

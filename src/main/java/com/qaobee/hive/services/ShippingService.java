@@ -25,6 +25,7 @@ import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 /**
@@ -82,4 +83,13 @@ public interface ShippingService {
      * @param resultHandler the result handler
      */
     void webHook(JsonObject body, Handler<AsyncResult<Boolean>> resultHandler);
+
+    /**
+     * Gets invoices.
+     *
+     * @param user          the user
+     * @param planId        the plan id
+     * @param resultHandler the result handler
+     */
+    void getInvoices(JsonObject user, int planId, Handler<AsyncResult<JsonArray>> resultHandler);
 }
