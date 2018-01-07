@@ -83,7 +83,7 @@ public class Warp10ServiceImpl implements Warp10Service {
             try {
                 labelsArr.add(n + "=" + URLEncoder.encode(labels.getValue(n).toString(), "UTF-8"));
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                LOG.error(e.getMessage(), e);
             }
         });
         return String.join(",", labelsArr);
