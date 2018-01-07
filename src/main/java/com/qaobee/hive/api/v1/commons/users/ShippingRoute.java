@@ -21,13 +21,25 @@ package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.ShippingService;
+import com.qaobee.hive.services.UserService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
+import com.qaobee.hive.technical.constantes.Constants;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
+import com.qaobee.hive.verticles.PDFVerticle;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.eventbus.DeliveryOptions;
+import io.vertx.core.eventbus.Message;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import org.apache.http.protocol.HTTP;
 
 import javax.inject.Inject;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * The type Shipping route.
@@ -37,6 +49,8 @@ public class ShippingRoute extends AbstractRoute {
 
     @Inject
     private ShippingService shippingService;
+    @Inject
+    private UserService userService;
 
     @Override
     public Router init() {
@@ -54,9 +68,49 @@ public class ShippingRoute extends AbstractRoute {
                 this::webHook);
 
         addRoute(router, "/invoices/:planid", HttpMethod.GET,
-                authHandler,
+                //    authHandler,
                 this::getInvoices);
+        addRoute(router, "/invoice/:planid/:id", HttpMethod.GET,
+                //    authHandler,
+                this::getInvoice);
         return router;
+    }
+
+    private void getInvoice(RoutingContext context) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMMM yyyy");
+        userService.getUser("5509ef1fdb8f8b6e2f51f4ce", u -> {
+            shippingService.getInvoice(context.request().getParam("id"), ar -> {
+                JsonObject invoice = ar.result();
+                JsonObject plan = u.result().getJsonObject("account").getJsonArray("listPlan").getJsonObject(Integer.parseInt(context.request().getParam("planid")));
+                JsonObject data = new JsonObject()
+                        .put("data", new JsonObject()
+                                .put("receipt_number", invoice.getString("receiptNumber"))
+                                .put("amountPaid", plan.getInteger("amountPaid") + ",00")
+                                .put("card", plan.getJsonObject("cardInfo").getString("last4"))
+                                .put("brand", plan.getJsonObject("cardInfo").getString("brand").toLowerCase())
+                                .put("paidDate", dateFormat.format(new Date(invoice.getLong("date"))))
+                                .put("plan", plan.getString("levelPlan"))
+                        )
+                        .put("template", "bill.ftl")
+                        .put("filename", invoice.getString("receiptNumber"));
+                vertx.eventBus().send(PDFVerticle.GENERATE_HTML, data, new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), (AsyncResult<Message<JsonObject>> pdfResp) -> {
+                    try {
+                        if (pdfResp.failed()) {
+                            throw pdfResp.cause();
+                        } else {
+                            vertx.fileSystem().readFile(pdfResp.result().body().getString(PDFVerticle.HTML), file -> {
+                                context.response().putHeader(HTTP.CONTENT_TYPE, PDFVerticle.CONTENT_TYPE_HTML)
+                                        .setStatusCode(200).end(file.result());
+                            });
+                        }
+                    } catch (Throwable e) { // NOSONAR
+                        e.printStackTrace();
+                        utils.handleError(context, new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e));
+                    }
+                });
+            });
+
+        });
     }
 
     private void unsubscribe(RoutingContext context) {
@@ -64,7 +118,10 @@ public class ShippingRoute extends AbstractRoute {
     }
 
     private void getInvoices(RoutingContext context) {
-        shippingService.getInvoices(context.user().principal(), Integer.parseInt(context.request().getParam("planid")), handleResponseArray(context));
+        userService.getUser("5509ef1fdb8f8b6e2f51f4ce", u -> {
+            shippingService.getInvoices(u.result(), Integer.parseInt(context.request().getParam("planid")), handleResponse(context));
+        });
+        //    shippingService.getInvoices(context.user().principal(), Integer.parseInt(context.request().getParam("planid")), handleResponse(context));
     }
 
     /**

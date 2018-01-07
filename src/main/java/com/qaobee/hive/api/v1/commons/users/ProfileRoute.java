@@ -106,7 +106,7 @@ public class ProfileRoute extends AbstractRoute {
                     throw pdfResp.cause();
                 } else {
                     handleResponse(context, new JsonObject()
-                            .put(HTTP.CONTENT_TYPE, PDFVerticle.CONTENT_TYPE)
+                            .put(HTTP.CONTENT_TYPE, PDFVerticle.CONTENT_TYPE_PDF)
                             .put(CoordinatorVerticle.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF)));
                 }
             } catch (Throwable e) { // NOSONAR

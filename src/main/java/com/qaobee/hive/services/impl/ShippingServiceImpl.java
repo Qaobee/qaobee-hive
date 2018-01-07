@@ -40,6 +40,7 @@ import com.stripe.Stripe;
 import com.stripe.exception.*;
 import com.stripe.model.*;
 import com.stripe.net.RequestOptions;
+import io.vertx.codegen.annotations.Nullable;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -454,13 +455,13 @@ public class ShippingServiceImpl implements ShippingService {
                 resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "planId is mandatory")));
             }
         } catch (NumberFormatException | StripeException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage(), e);
             resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, e)));
         }
     }
 
     @Override
-    public void getInvoices(JsonObject user, int planId, Handler<AsyncResult<JsonArray>> resultHandler) {
+    public void getInvoices(JsonObject user, int planId, Handler<AsyncResult<JsonObject>> resultHandler) {
         RequestOptions requestOptions = (new RequestOptions.RequestOptionsBuilder()).setApiKey(stripe.getString("api_secret")).build(); // NOSONAR
         try {
             String customerId = user.getJsonObject("account").getJsonArray("listPlan").getJsonObject(planId).getString("cardId");
@@ -468,9 +469,21 @@ public class ShippingServiceImpl implements ShippingService {
             invoiceParams.put("customer", customerId);
             JsonArray invoices = new JsonArray();
             Invoice.list(invoiceParams, requestOptions).getData().forEach(invoice -> invoices.add(new JsonObject(Json.encode(invoice))));
-            resultHandler.handle(Future.succeededFuture(invoices));
+            resultHandler.handle(Future.succeededFuture(new JsonObject().put("invoices", invoices)));
         } catch (AuthenticationException | InvalidRequestException | APIConnectionException | APIException | CardException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage(), e);
+            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, e)));
+        }
+    }
+
+    @Override
+    public void getInvoice(@Nullable String id, Handler<AsyncResult<JsonObject>> resultHandler) {
+        Stripe.apiKey = stripe.getString("api_secret"); // NOSONAR
+        try {
+            Invoice invoice = Invoice.retrieve(id);
+            resultHandler.handle(Future.succeededFuture(new JsonObject(Json.encode(invoice))));
+        } catch (AuthenticationException | InvalidRequestException | APIConnectionException | APIException | CardException e) {
+            LOG.error(e.getMessage(), e);
             resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, e)));
         }
     }

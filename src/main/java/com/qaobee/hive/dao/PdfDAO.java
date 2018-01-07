@@ -26,7 +26,6 @@ import io.vertx.core.json.JsonObject;
 /**
  * The interface Pdf dao.
  */
-@FunctionalInterface
 public interface PdfDAO {
     /**
      * Generate pdf.
@@ -37,4 +36,14 @@ public interface PdfDAO {
      * @param resultHandler the result handler
      */
     void generatePDF(JsonObject data, String template, String filename, Handler<AsyncResult<JsonObject>> resultHandler);
+
+    /**
+     * Generate html.
+     *
+     * @param data          the data
+     * @param template      the template
+     * @param filename      the filename
+     * @param resultHandler the result handler
+     */
+    void generateHTML(JsonObject data, String template, String filename, Handler<AsyncResult<JsonObject>> resultHandler);
 }

@@ -26,8 +26,10 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.MediaReplacedElementFactory;
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -49,6 +51,7 @@ import java.io.OutputStream;
 public class PdfDAOImpl implements PdfDAO {
     private static final Logger LOG = LoggerFactory.getLogger(PdfDAOImpl.class);
     private static final String PDF = "pdf";
+    private static final String HTML = "html";
     @Inject
     private TemplatesDAO templatesDAO;
     @Inject
@@ -97,5 +100,23 @@ public class PdfDAOImpl implements PdfDAO {
                 }
             }
         }, resultHandler);
+    }
+
+    @Override
+    public void generateHTML(JsonObject data, String template, String filename, Handler<AsyncResult<JsonObject>> resultHandler) {
+        String datadir = System.getProperty("user.home");
+        if (StringUtils.isNotBlank(System.getenv("OPENSHIFT_DATA_DIR"))) {
+            datadir = System.getenv("OPENSHIFT_DATA_DIR");
+        }
+        File dir = new File(datadir + "/tmp");
+        assert dir.exists() || dir.mkdirs();
+        final File temp = new File(datadir + "/tmp/" + filename + ".html");
+        if(temp.exists()) {
+            vertx.fileSystem().deleteBlocking(temp.getAbsolutePath());
+        }
+        vertx.fileSystem().writeFile(temp.getAbsolutePath(), Buffer.buffer(templatesDAO.generatePDF(data, template)), fres -> {
+            final JsonObject res = new JsonObject().put(HTML, temp.getAbsolutePath());
+            resultHandler.handle(Future.succeededFuture(res));
+        });
     }
 }

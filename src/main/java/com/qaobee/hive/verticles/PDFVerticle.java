@@ -44,6 +44,10 @@ public class PDFVerticle extends AbstractGuiceVerticle {
      */
     public static final String GENERATE_PDF = "internal.pdf.generate";
     /**
+     * The constant GENERATE_HTML.
+     */
+    public static final String GENERATE_HTML = "internal.html.generate";
+    /**
      * The constant DATA.
      */
     public static final String DATA = "data";
@@ -60,9 +64,17 @@ public class PDFVerticle extends AbstractGuiceVerticle {
      */
     public static final String PDF = "pdf";
     /**
-     * The constant CONTENT_TYPE.
+     * The constant HTML.
      */
-    public static final String CONTENT_TYPE = "application/pdf";
+    public static final String HTML = "html";
+    /**
+     * The constant CONTENT_TYPE_PDF.
+     */
+    public static final String CONTENT_TYPE_PDF = "application/pdf";
+    /**
+     * The constant CONTENT_TYPE_HTML.
+     */
+    public static final String CONTENT_TYPE_HTML = "text/html";
 
     @Inject
     private PdfDAO pdfDAO;
@@ -70,12 +82,22 @@ public class PDFVerticle extends AbstractGuiceVerticle {
     @Override
     public void start(Future<Void> startFuture) {
         inject(this).add(GENERATE_PDF, this::generatePDF).register(startFuture);
+        inject(this).add(GENERATE_HTML, this::generateHTML).register(startFuture);
     }
 
     private void generatePDF(Message<JsonObject> message) {
         try {
             utils.testMandatoryParams(message.body(), DATA, TEMPLATE, FILE_NAME);
             pdfDAO.generatePDF(message.body().getJsonObject(DATA), message.body().getString(TEMPLATE), message.body().getString(FILE_NAME), handleJson(message));
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message,e );
+        }
+    }
+    private void generateHTML(Message<JsonObject> message) {
+        try {
+            utils.testMandatoryParams(message.body(), DATA, TEMPLATE, FILE_NAME);
+            pdfDAO.generateHTML(message.body().getJsonObject(DATA), message.body().getString(TEMPLATE), message.body().getString(FILE_NAME), handleJson(message));
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message,e );

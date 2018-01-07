@@ -20,12 +20,12 @@
 package com.qaobee.hive.services;
 
 import com.qaobee.hive.services.impl.ShippingServiceImpl;
+import io.vertx.codegen.annotations.Nullable;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 /**
@@ -91,5 +91,7 @@ public interface ShippingService {
      * @param planId        the plan id
      * @param resultHandler the result handler
      */
-    void getInvoices(JsonObject user, int planId, Handler<AsyncResult<JsonArray>> resultHandler);
+    void getInvoices(JsonObject user, int planId, Handler<AsyncResult<JsonObject>> resultHandler);
+
+    void getInvoice(@Nullable String id, Handler<AsyncResult<JsonObject>> asyncResultHandler);
 }
