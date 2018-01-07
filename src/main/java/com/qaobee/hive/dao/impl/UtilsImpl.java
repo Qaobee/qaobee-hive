@@ -175,14 +175,13 @@ public class UtilsImpl implements Utils {
     @Override
     public void handleError(RoutingContext context, Throwable t) {
         QaobeeException e;
-        t.printStackTrace();
         if (t instanceof QaobeeException) {
             e = (QaobeeException) t;
         } else {
             e = new QaobeeException(ExceptionCodes.INTERNAL_ERROR, t.getMessage());
         }
         if (LOG.isErrorEnabled()) {
-            LOG.error("[ {} : {} ] {}", e.getCode().name(), e.getCode().getCode(), e.getMessage());
+            LOG.error("[ {} : {} ] {}", e.getCode().name(), e.getCode().getCode(), e.getMessage(), e);
         }
         context.response().putHeader(HTTP.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON)
                 .setStatusCode(e.getCode().getCode())
