@@ -68,48 +68,44 @@ public class ShippingRoute extends AbstractRoute {
                 this::webHook);
 
         addRoute(router, "/invoices/:planid", HttpMethod.GET,
-                //    authHandler,
+                authHandler,
                 this::getInvoices);
         addRoute(router, "/invoice/:planid/:id", HttpMethod.GET,
-                //    authHandler,
+                authHandler,
                 this::getInvoice);
         return router;
     }
 
     private void getInvoice(RoutingContext context) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMMM yyyy");
-        userService.getUser("5509ef1fdb8f8b6e2f51f4ce", u -> {
-            shippingService.getInvoice(context.request().getParam("id"), ar -> {
-                JsonObject invoice = ar.result();
-                JsonObject plan = u.result().getJsonObject("account").getJsonArray("listPlan").getJsonObject(Integer.parseInt(context.request().getParam("planid")));
-                JsonObject data = new JsonObject()
-                        .put("data", new JsonObject()
-                                .put("receipt_number", invoice.getString("receiptNumber"))
-                                .put("amountPaid", plan.getInteger("amountPaid") + ",00")
-                                .put("card", plan.getJsonObject("cardInfo").getString("last4"))
-                                .put("brand", plan.getJsonObject("cardInfo").getString("brand").toLowerCase())
-                                .put("paidDate", dateFormat.format(new Date(invoice.getLong("date"))))
-                                .put("plan", plan.getString("levelPlan"))
-                        )
-                        .put("template", "bill.ftl")
-                        .put("filename", invoice.getString("receiptNumber"));
-                vertx.eventBus().send(PDFVerticle.GENERATE_HTML, data, new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), (AsyncResult<Message<JsonObject>> pdfResp) -> {
-                    try {
-                        if (pdfResp.failed()) {
-                            throw pdfResp.cause();
-                        } else {
-                            vertx.fileSystem().readFile(pdfResp.result().body().getString(PDFVerticle.HTML), file -> {
-                                context.response().putHeader(HTTP.CONTENT_TYPE, PDFVerticle.CONTENT_TYPE_HTML)
-                                        .setStatusCode(200).end(file.result());
-                            });
-                        }
-                    } catch (Throwable e) { // NOSONAR
-                        e.printStackTrace();
-                        utils.handleError(context, new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e));
+        shippingService.getInvoice(context.request().getParam("id"), ar -> {
+            JsonObject invoice = ar.result();
+            JsonObject plan = context.user().principal().getJsonObject("account").getJsonArray("listPlan").getJsonObject(Integer.parseInt(context.request().getParam("planid")));
+            JsonObject data = new JsonObject()
+                    .put("data", new JsonObject()
+                            .put("receipt_number", invoice.getString("receiptNumber"))
+                            .put("amountPaid", plan.getInteger("amountPaid") + ",00")
+                            .put("card", plan.getJsonObject("cardInfo").getString("last4"))
+                            .put("brand", plan.getJsonObject("cardInfo").getString("brand").toLowerCase())
+                            .put("paidDate", dateFormat.format(new Date(invoice.getLong("date") * 1000)))
+                            .put("plan", plan.getString("levelPlan"))
+                    )
+                    .put("template", "bill.ftl")
+                    .put("filename", context.request().getParam("id"));
+            vertx.eventBus().send(PDFVerticle.GENERATE_HTML, data, new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), (AsyncResult<Message<JsonObject>> pdfResp) -> {
+                try {
+                    if (pdfResp.failed()) {
+                        throw pdfResp.cause();
+                    } else {
+                        vertx.fileSystem().readFile(pdfResp.result().body().getString(PDFVerticle.HTML), file -> context.response()
+                                .putHeader(HTTP.CONTENT_TYPE, PDFVerticle.CONTENT_TYPE_HTML)
+                                .setStatusCode(200).end(file.result()));
                     }
-                });
+                } catch (Throwable e) { // NOSONAR
+                    e.printStackTrace();
+                    utils.handleError(context, new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e));
+                }
             });
-
         });
     }
 
@@ -118,10 +114,7 @@ public class ShippingRoute extends AbstractRoute {
     }
 
     private void getInvoices(RoutingContext context) {
-        userService.getUser("5509ef1fdb8f8b6e2f51f4ce", u -> {
-            shippingService.getInvoices(u.result(), Integer.parseInt(context.request().getParam("planid")), handleResponse(context));
-        });
-        //    shippingService.getInvoices(context.user().principal(), Integer.parseInt(context.request().getParam("planid")), handleResponse(context));
+        shippingService.getInvoices(context.user().principal(), Integer.parseInt(context.request().getParam("planid")), handleResponse(context));
     }
 
     /**
