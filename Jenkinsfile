@@ -1,11 +1,10 @@
 #!/usr/bin/env groovy
 import hudson.model.*
-import groovy.json.JsonOutput
 
 node {
     def version = ''
        try {
-        notifyBuild('STARTED')
+        this.notifyBuild('STARTED')
 
     stage('Checkout') {
         git credentialsId: 'b74a476d-7464-429c-ab8e-7ebbe03bcd1f', url: 'git@gitlab.com:qaobee/qaobee-hive.git'
@@ -87,7 +86,7 @@ node {
     throw e
   } finally {
     // Success or failure, always send notifications
-    notifyBuild(currentBuild.result)
+    this.notifyBuild(currentBuild.result)
   }
 }
 
@@ -116,7 +115,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
   }
 
   // Send notifications
-  notifySlack (color: colorCode, message: summary, buildStatus)
+  this.notifySlack (colorCode, summary, buildStatus)
 }
 
 def notifySlack(color, message, buildStatus) {
