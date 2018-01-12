@@ -1,8 +1,11 @@
 #!/usr/bin/env groovy
 import hudson.model.*
+import groovy.json.JsonOutput
 
 node {
     def version = ''
+       try {
+        notifyBuild('STARTED')
 
     stage('Checkout') {
         git credentialsId: 'b74a476d-7464-429c-ab8e-7ebbe03bcd1f', url: 'git@gitlab.com:qaobee/qaobee-hive.git'
@@ -78,6 +81,48 @@ node {
                 reportName: "Changelog"
         ])
     }
+       } catch (e) {
+    // If there was an exception thrown, the build failed
+    currentBuild.result = "FAILED"
+    throw e
+  } finally {
+    // Success or failure, always send notifications
+    notifyBuild(currentBuild.result)
+  }
+}
+
+def notifyBuild(String buildStatus = 'STARTED') {
+  // build status of null means successful
+  buildStatus =  buildStatus ?: 'SUCCESSFUL'
+
+  // Default values
+  def colorName = 'RED'
+  def colorCode = '#FF0000'
+  def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+  def summary = "${subject} (${env.BUILD_URL})"
+  def details = """<p>STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+    <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
+
+  // Override default values based on build status
+  if (buildStatus == 'STARTED') {
+    color = 'YELLOW'
+    colorCode = '#FFFF00'
+  } else if (buildStatus == 'SUCCESSFUL') {
+    color = 'GREEN'
+    colorCode = '#00FF00'
+  } else {
+    color = 'RED'
+    colorCode = '#FF0000'
+  }
+
+  // Send notifications
+  notifySlack (color: colorCode, message: summary, buildStatus)
+}
+
+def notifySlack(color, message, buildStatus) {
+    def slackURL = 'https://hooks.slack.com/services/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'
+    def payload = "\"username\": \"Qaobee-Hive\",\"attachments\":[{\"title: \"${env.JOB_NAME} ${buildStatus}\",\"color\": \"${color}\",\"text\": ${message}}])"
+    sh "curl -X POST --data-urlencode \'payload=${payload}\' ${slackURL}"
 }
 
 
