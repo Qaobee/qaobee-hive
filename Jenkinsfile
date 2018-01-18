@@ -93,14 +93,8 @@ node {
 def notifyBuild(String buildStatus = 'STARTED') {
     // build status of null means successful
     buildStatus = buildStatus ?: 'SUCCESSFUL'
-
-    // Default values
-    String colorName = 'RED'
-    String colorCode = '#FF0000'
-    String subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+    String subject = "${buildStatus}: Job ${env.JOB_NAME} [${env.BUILD_NUMBER}]"
     String summary = "${subject} (${env.BUILD_URL})"
-    String details = "<p>STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p><p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"
-
     // Override default values based on build status
     if (buildStatus == 'STARTED') {
         color = 'YELLOW'
@@ -120,7 +114,9 @@ def notifyBuild(String buildStatus = 'STARTED') {
 def notifySlack(color, message, buildStatus) {
     String slackURL = 'https://hooks.slack.com/services/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'
     String payload = "{\"username\": \"Qaobee-Hive\",\"attachments\":[{\"title\": \"${env.JOB_NAME} ${buildStatus}\",\"color\": \"${color}\",\"text\": \"${message}\"}]}"
-    sh "curl -X POST -H 'Content-type: application/json' --data \'${payload}\' ${slackURL}"
+    def cmd = "curl -X POST -H 'Content-type: application/json' --data '${payload}' ${slackURL}"
+    print cmd
+    sh cmd
 }
 
 
