@@ -47,6 +47,7 @@ node {
 
         stage("Deploy $version in REC") {
             sh "./gradlew updateRancherImage -PdockerVersion=$version"
+            this.notifyBuild('PUBLISHED')
         }
 
         stage("Doc $version") {
@@ -102,6 +103,9 @@ def notifyBuild(String buildStatus = 'STARTED') {
     } else if (buildStatus == 'SUCCESSFUL') {
         color = 'GREEN'
         colorCode = '#00FF00'
+    } else if (buildStatus == 'PUBLISHED') {
+        color = 'BLUE'
+        colorCode = '#0000FF'
     } else {
         color = 'RED'
         colorCode = '#FF0000'
