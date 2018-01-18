@@ -119,8 +119,8 @@ def notifyBuild(String buildStatus = 'STARTED') {
 
 def notifySlack(color, message, buildStatus) {
     def slackURL = 'https://hooks.slack.com/services/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'
-    def payload = "{\"username\": \"Qaobee-Hive\",\"attachments\":[{\"title: \"${env.JOB_NAME} ${buildStatus}\",\"color\": \"${color}\",\"text\": \"${message}\"}]}"
-    sh "curl -X POST --data-urlencode \'payload=${payload}\' ${slackURL}"
+    def payload = "{\"username\": \"Qaobee-Hive\",\"attachments\":[{\"title\": \"${env.JOB_NAME} ${buildStatus}\",\"color\": \"${color}\",\"text\": \"${message}\"}]}"
+    sh "curl -X POST -H 'Content-type: application/json' --data \'${payload}\' ${slackURL}"
 }
 
 
