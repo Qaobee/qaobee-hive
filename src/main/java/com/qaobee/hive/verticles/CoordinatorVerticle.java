@@ -99,7 +99,7 @@ public class CoordinatorVerticle extends AbstractGuiceVerticle {
             );
         }
         router.route().path("/*").produces("application/json").handler(CoordinatorVerticle::jsonHandler);
-        router.route().path("/*").produces("application/json").handler(warp10Handler::hit);
+        router.route().path("/api/*").produces("application/json").handler(warp10Handler::hit);
         router.get("/").handler(event -> event.response().end("Welcome to Qaobee Hive"));
 
         // Load Routes
