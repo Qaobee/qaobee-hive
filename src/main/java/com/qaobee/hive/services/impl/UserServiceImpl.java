@@ -125,8 +125,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void generateProfilePDF(JsonObject u, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
-        final JsonObject juser = new JsonObject().put("firstname", u.getString("firstname"))
-                .put("name", u.getString("name"))
+        final JsonObject juser = new JsonObject()
+                .put("firstname", u.getString("firstname", ""))
+                .put("name", u.getString("name", ""))
                 .put("username", u.getJsonObject(ACCOUNT_FIELD).getString("login"))
                 .put("phoneNumber", u.getJsonObject("contact").getString("home"))
                 .put("email", u.getJsonObject("contact").getString("email"))
@@ -187,8 +188,6 @@ public class UserServiceImpl implements UserService {
             if (user == null || user.getAccount() == null || user.getContact() == null) {
                 resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.required", locale))));
             } else {
-                checkUserName(user.getName(), locale);
-                checkUserFirstname(user.getFirstname(), locale);
                 checkUserLogin(user.getAccount().getLogin(), locale);
                 testEmail(user.getContact().getEmail(), locale, ar -> {
                     if (ar.succeeded()) {
