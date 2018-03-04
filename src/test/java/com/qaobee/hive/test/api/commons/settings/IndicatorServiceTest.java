@@ -294,14 +294,6 @@ public class IndicatorServiceTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(0));
 
-            params.put(IndicatorRoute.PARAM_INDICATOR_CODE, new JsonArray().add("hightPerson"))
-                    .put(IndicatorRoute.PARAM_COUNTRY_ID, "123");
-            given().header(TOKEN, u.result().getAccount().getToken())
-                    .body(params.encode())
-                    .when().post(BASE_URL + "/getByCode")
-                    .then().assertThat().statusCode(200)
-                    .body("", hasSize(0));
-
             params.put(IndicatorRoute.PARAM_COUNTRY_ID, country.result().getString(CountryRoute.PARAM_ID))
                     .put(IndicatorRoute.PARAM_ACTIVITY_ID, "123");
             given().header(TOKEN, u.result().getAccount().getToken())

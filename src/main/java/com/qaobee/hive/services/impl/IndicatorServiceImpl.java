@@ -24,6 +24,7 @@ import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.services.MongoDB;
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
@@ -52,34 +53,51 @@ public class IndicatorServiceImpl implements IndicatorService {
 
     @Override
     public void getIndicatorByCode(String activityId, String countryId, JsonArray listIndicators, Handler<AsyncResult<JsonArray>> resultHandler) {
-        JsonObject dbObjectParent = new JsonObject()
+        final JsonObject[] dbObjectParent = {new JsonObject()
                 .put(PARAM_ACTIVITY_ID, activityId)
                 .put(PARAM_COUNTRY_ID, countryId)
-                .put("code", new JsonObject().put("$in", listIndicators));
-        JsonObject match = new JsonObject().put("$match", dbObjectParent);
-        JsonArray pipelineAggregation = new JsonArray().add(match);
-        mongo.aggregate(pipelineAggregation, DBCollections.INDICATOR_CFG, resultHandler);
+                .put("code", new JsonObject().put("$in", listIndicators))};
+        final JsonObject[] match = {new JsonObject().put("$match", dbObjectParent[0])};
+        final JsonArray[] pipelineAggregation = {new JsonArray().add(match[0])};
+        mongo.aggregate(pipelineAggregation[0], DBCollections.INDICATOR_CFG, r -> {
+            if (r.succeeded() && r.result().size() > 0) {
+                resultHandler.handle(Future.succeededFuture(r.result()));
+            } else {
+                dbObjectParent[0] = dbObjectParent[0].put(PARAM_COUNTRY_ID, "CNTR-250-FR-FRA");
+                match[0] = new JsonObject().put("$match", dbObjectParent[0]);
+                pipelineAggregation[0] = new JsonArray().add(match[0]);
+                mongo.aggregate(pipelineAggregation[0], DBCollections.INDICATOR_CFG, resultHandler);
+            }
+        });
     }
 
     @Override
     public void getIndicatorsList(String activityId, String countryId, JsonArray screen, Handler<AsyncResult<JsonArray>> resultHandler) {
         // $MATCH section
-        JsonObject match = new JsonObject().put("$match", new JsonObject()
+        final JsonObject[] match = {new JsonObject().put("$match", new JsonObject()
                 .put(PARAM_ACTIVITY_ID, activityId)
                 .put(PARAM_COUNTRY_ID, countryId)
-                .put("listScreen", new JsonObject().put("$in", screen)));
+                .put("listScreen", new JsonObject().put("$in", screen)))};
         // $PROJECT section
-        JsonObject dbObjectParent = new JsonObject()
+        final JsonObject[] dbObjectParent = {new JsonObject()
                 .put("_id", 1)
                 .put("code", 1)
                 .put(PARAM_ACTIVITY_ID, 1)
                 .put("indicatorType", 1)
                 .put("listScreen", 1)
                 .put("listField", 1)
-                .put("listValues", 1);
-        JsonObject project = new JsonObject().put("$project", dbObjectParent);
-        JsonArray pipelineAggregation = new JsonArray().add(match).add(project);
-        mongo.aggregate(pipelineAggregation, DBCollections.INDICATOR_CFG, resultHandler);
+                .put("listValues", 1)};
+        JsonObject project = new JsonObject().put("$project", dbObjectParent[0]);
+        final JsonArray[] pipelineAggregation = {new JsonArray().add(match[0]).add(project)};
+        mongo.aggregate(pipelineAggregation[0], DBCollections.INDICATOR_CFG, r -> {
+            if (r.succeeded() && r.result().size() > 0) {
+                resultHandler.handle(Future.succeededFuture(r.result()));
+            } else {
+                match[0] = match[0].put(PARAM_COUNTRY_ID, "CNTR-250-FR-FRA");
+                pipelineAggregation[0] = new JsonArray().add(match[0]);
+                mongo.aggregate(pipelineAggregation[0], DBCollections.INDICATOR_CFG, resultHandler);
+            }
+        });
     }
 
     @Override
