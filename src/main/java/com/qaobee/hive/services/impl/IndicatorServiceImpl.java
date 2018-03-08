@@ -55,7 +55,7 @@ public class IndicatorServiceImpl implements IndicatorService {
     public void getIndicatorByCode(String activityId, String countryId, JsonArray listIndicators, Handler<AsyncResult<JsonArray>> resultHandler) {
         final JsonObject[] dbObjectParent = {new JsonObject()
                 .put(PARAM_ACTIVITY_ID, activityId)
-                .put(PARAM_COUNTRY_ID, countryId)
+                .put(PARAM_COUNTRY_ID, "CNTR-724-ES-ESP")
                 .put("code", new JsonObject().put("$in", listIndicators))};
         final JsonObject[] match = {new JsonObject().put("$match", dbObjectParent[0])};
         final JsonArray[] pipelineAggregation = {new JsonArray().add(match[0])};
@@ -63,7 +63,7 @@ public class IndicatorServiceImpl implements IndicatorService {
             if (r.succeeded() && r.result().size() > 0) {
                 resultHandler.handle(Future.succeededFuture(r.result()));
             } else {
-                dbObjectParent[0] = dbObjectParent[0].put(PARAM_COUNTRY_ID, "CNTR-250-FR-FRA");
+                dbObjectParent[0].put(PARAM_COUNTRY_ID, "CNTR-250-FR-FRA");
                 match[0] = new JsonObject().put("$match", dbObjectParent[0]);
                 pipelineAggregation[0] = new JsonArray().add(match[0]);
                 mongo.aggregate(pipelineAggregation[0], DBCollections.INDICATOR_CFG, resultHandler);
@@ -76,7 +76,7 @@ public class IndicatorServiceImpl implements IndicatorService {
         // $MATCH section
         final JsonObject[] match = {new JsonObject().put("$match", new JsonObject()
                 .put(PARAM_ACTIVITY_ID, activityId)
-                .put(PARAM_COUNTRY_ID, countryId)
+                .put(PARAM_COUNTRY_ID, "CNTR-724-ES-ESP")
                 .put("listScreen", new JsonObject().put("$in", screen)))};
         // $PROJECT section
         final JsonObject[] dbObjectParent = {new JsonObject()
@@ -93,8 +93,8 @@ public class IndicatorServiceImpl implements IndicatorService {
             if (r.succeeded() && r.result().size() > 0) {
                 resultHandler.handle(Future.succeededFuture(r.result()));
             } else {
-                match[0] = match[0].put(PARAM_COUNTRY_ID, "CNTR-250-FR-FRA");
-                pipelineAggregation[0] = new JsonArray().add(match[0]);
+                match[0].getJsonObject("$match").put(PARAM_COUNTRY_ID, "CNTR-250-FR-FRA");
+                pipelineAggregation[0] = new JsonArray().add(match[0]).add(project);
                 mongo.aggregate(pipelineAggregation[0], DBCollections.INDICATOR_CFG, resultHandler);
             }
         });
