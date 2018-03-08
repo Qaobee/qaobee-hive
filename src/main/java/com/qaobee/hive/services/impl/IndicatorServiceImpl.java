@@ -55,7 +55,7 @@ public class IndicatorServiceImpl implements IndicatorService {
     public void getIndicatorByCode(String activityId, String countryId, JsonArray listIndicators, Handler<AsyncResult<JsonArray>> resultHandler) {
         final JsonObject[] dbObjectParent = {new JsonObject()
                 .put(PARAM_ACTIVITY_ID, activityId)
-                .put(PARAM_COUNTRY_ID, "CNTR-724-ES-ESP")
+                .put(PARAM_COUNTRY_ID, countryId)
                 .put("code", new JsonObject().put("$in", listIndicators))};
         final JsonObject[] match = {new JsonObject().put("$match", dbObjectParent[0])};
         final JsonArray[] pipelineAggregation = {new JsonArray().add(match[0])};
@@ -76,7 +76,7 @@ public class IndicatorServiceImpl implements IndicatorService {
         // $MATCH section
         final JsonObject[] match = {new JsonObject().put("$match", new JsonObject()
                 .put(PARAM_ACTIVITY_ID, activityId)
-                .put(PARAM_COUNTRY_ID, "CNTR-724-ES-ESP")
+                .put(PARAM_COUNTRY_ID, countryId)
                 .put("listScreen", new JsonObject().put("$in", screen)))};
         // $PROJECT section
         final JsonObject[] dbObjectParent = {new JsonObject()
