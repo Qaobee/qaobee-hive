@@ -327,7 +327,7 @@ public class SB_StatsTest extends VertxJunitSupport {
                     .put(PARAM_END_DATE, 1451516400000L)
                     .put(PARAM_INDICATOR_CODE, new JsonArray().add("originShootAtt"))
                     .put(PARAM_LIST_OWNERS, new JsonArray().add("5f82c510-2c89-46b0-b87d-d3b59e748615"));
-            List<String> mandatoryParams = Arrays.asList(PARAM_INDICATOR_CODE, PARAM_AGGREGAT, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE);
+            List<String> mandatoryParams = Arrays.asList( PARAM_AGGREGAT, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE);
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);

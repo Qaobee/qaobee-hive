@@ -73,7 +73,7 @@ public class SB_StatisticsRoute extends AbstractRoute {// NOSONAR
 
         addRoute(router, "/getStatGroupBy", HttpMethod.POST,
                 authHandler,
-                c -> mandatoryHandler.testBodyParams(c, PARAM_INDICATOR_CODE, PARAM_AGGREGAT, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE),
+                c -> mandatoryHandler.testBodyParams(c, PARAM_AGGREGAT, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE),
                 this::getStatsGroupedBy);
 
         addRoute(router, "/getListDetailValue", HttpMethod.POST,

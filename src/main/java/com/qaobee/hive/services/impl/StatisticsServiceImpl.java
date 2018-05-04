@@ -237,8 +237,12 @@ public class StatisticsServiceImpl implements StatisticsService {
         // Aggregate section
         // $MACTH section
         JsonObject dbObjectParent = new JsonObject()
-                .put(CODE_FIELD, new JsonObject().put("$in", listIndicators))
                 .put(OWNER_FIELD, new JsonObject().put("$in", listOwners));
+        
+        // - indicators
+        if(listIndicators!=null && !listIndicators.isEmpty()) {
+            dbObjectParent.put(CODE_FIELD, new JsonObject().put("$in", listIndicators));
+        }
         // - values
         if (!value.isEmpty()) {
             dbObjectParent.put(VALUE_FIELD, new JsonObject().put("$in", value));
