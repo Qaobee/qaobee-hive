@@ -3,10 +3,8 @@ package com.qaobee.hive.services.impl;
 import com.qaobee.hive.services.Warp10Service;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import io.vertx.core.AsyncResult;
-import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
-import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClient;
 import org.apache.commons.lang3.StringUtils;
@@ -68,12 +66,12 @@ public class Warp10ServiceImpl implements Warp10Service {
     }
 
     private void sendToWarp10(String gts, Handler<AsyncResult<Boolean>> resultHandler) {
-        if(!"DEV".equals(env)) {
+      /*  if(!"DEV".equals(env)) {
             webClient.post(config.getInteger("port"), config.getString("host"), config.getString("path") + "update")
                     .putHeader("X-Warp10-Token", config.getString("writeToken"))
                     .ssl("https".equals(config.getString("scheme", "http")))
                     .sendBuffer(Buffer.buffer(gts), res -> resultHandler.handle(Future.succeededFuture(res.succeeded())));
-        }
+        }*/
     }
 
     private String getLabels(JsonObject labels) {
