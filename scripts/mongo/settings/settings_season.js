@@ -113,4 +113,14 @@ db.Season.insert({
     "activityId" : "ACT-HAND",
     "countryId" : "CNTR-250-FR-FRA"
 });
+
+db.Season.insert({
+    "_id" : "5b3be57c4d1099219abf1128",
+    "code" : "SAI-2018",
+    "label" : "SAISON 2018-2019",
+    "startDate" : NumberLong(1530396001000),
+    "endDate" : NumberLong(1561931999000),
+    "activityId" : "ACT-HAND",
+    "countryId" : "CNTR-250-FR-FRA"
+});
 // ////////////////////////////////////////////////////////

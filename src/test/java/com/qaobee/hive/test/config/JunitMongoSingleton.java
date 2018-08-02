@@ -77,7 +77,7 @@ class JunitMongoSingleton {
             LOG.info("Running mongod");
             int port = config.getJsonObject("mongo.db").getInteger("port");
             IMongodConfig mongodConfig = new MongodConfigBuilder()
-                    .version(Version.Main.V3_5)
+                    .version(Version.Main.V2_4)
                     .net(new Net(port, Network.localhostIsIPv6()))
                     .build();
             IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()

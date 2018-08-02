@@ -204,7 +204,7 @@ def getGitVersion(inc) {
 
 task gitChangelogTask(type: GitChangelogTask) {
     filePath = "build/docs/changelog/index.html"
-    templateContent = new File('changelog.mustache').getText('UTF-8')
+    templateContent = new File( "${projectDir}/changelog.mustache").getText('UTF-8')
     fromRef = getGitVersion(-5)
 }
 
