@@ -68,9 +68,9 @@ public final class Messages {
     public static String getString(final String key, final String locale, final Object... params) {
         try {
             if (params.length > 0) {
-                return MessageFormat.format(ResourceBundle.getBundle(BUNDLE_NAME, Locale.forLanguageTag(locale.split(",")[0])).getString(key), params);
+                return MessageFormat.format(ResourceBundle.getBundle(BUNDLE_NAME, Locale.forLanguageTag(locale.split(",")[0].replaceAll("-", "_"))).getString(key), params);
             } else {
-                return ResourceBundle.getBundle(BUNDLE_NAME, Locale.forLanguageTag(locale.split(",")[0])).getString(key);
+                return ResourceBundle.getBundle(BUNDLE_NAME, Locale.forLanguageTag(locale.split(",")[0].replaceAll("-", "_"))).getString(key);
             }
         } catch (final MissingResourceException e) {
             LOG.warn(e.getMessage());
