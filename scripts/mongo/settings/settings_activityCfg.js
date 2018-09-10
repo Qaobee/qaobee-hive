@@ -363,103 +363,164 @@ db.ActivityCfg.insert({
         "order" : NumberInt(2)
     } ],
     "listCategoryAge" : [ {
-        "code" : "sen",
+        "code" : "senG",
         "label" : "Senior Gars",
-        "ageMax" : NumberInt(150),
-        "ageMin" : NumberInt(18),
+        "ageMax" : 150,
+        "ageMin" : 18,
         "genre" : "Homme",
-        "order" : NumberInt(1)
-    }, {
+        "order" : 1
+    }, 
+    {
         "code" : "senF",
-        "label" : "Senior Féminin",
-        "ageMax" : NumberInt(150),
-        "ageMin" : NumberInt(18),
+        "label" : "Senior Filles",
+        "ageMax" : 150,
+        "ageMin" : 18,
         "genre" : "Femme",
-        "order" : NumberInt(2)
-    }, {
-        "code" : "u18",
-        "label" : "Moins de 18 Gars",
-        "ageMax" : NumberInt(17),
-        "ageMin" : NumberInt(17),
+        "order" : 2
+    }, 
+    {
+        "code" : "u18G",
+        "label" : "- 18 Gars",
+        "ageMax" : 18,
+        "ageMin" : 15,
         "genre" : "Homme",
-        "order" : NumberInt(3)
-    }, {
+        "order" : 3
+    }, 
+    {
         "code" : "u18F",
-        "label" : "Moins de 18 Fille",
-        "ageMax" : NumberInt(17),
-        "ageMin" : NumberInt(16),
+        "label" : "- 18 Fille",
+        "ageMax" : 18,
+        "ageMin" : 15,
         "genre" : "Femme",
-        "order" : NumberInt(4)
-    }, {
-        "code" : "u17",
-        "label" : "Moins de 17 Gars",
-        "ageMax" : NumberInt(16),
-        "ageMin" : NumberInt(16),
+        "order" : 4
+    }, 
+    {
+        "code" : "u17G",
+        "label" : "- 17 Gars",
+        "ageMax" : 17,
+        "ageMin" : 15,
         "genre" : "Homme",
-        "order" : NumberInt(5)
-    }, {
+        "order" : 5
+    }, 
+    {
+        "code" : "u17F",
+        "label" : "- 17 Filles",
+        "ageMax" : 17,
+        "ageMin" : 15,
+        "genre" : "Femme",
+        "order" : 6
+    },
+    {
         "code" : "u16",
-        "label" : "Moins de 16 Gars",
-        "ageMax" : NumberInt(15),
-        "ageMin" : NumberInt(15),
+        "label" : "- 16 Gars",
+        "ageMax" : 15,
+        "ageMin" : 15,
         "genre" : "Homme",
-        "order" : NumberInt(6)
-    }, {
+        "order" : 7
+    }, 
+    {
         "code" : "u16F",
-        "label" : "Moins de 16 Fille",
-        "ageMax" : NumberInt(15),
-        "ageMin" : NumberInt(14),
+        "label" : "- 16 Fille",
+        "ageMax" : 15,
+        "ageMin" : 14,
         "genre" : "Femme",
-        "order" : NumberInt(7)
-    }, {
-        "code" : "u15",
-        "label" : "Moins de 15 Gars",
-        "ageMax" : NumberInt(14),
-        "ageMin" : NumberInt(14),
+        "order" : 8
+    }, 
+    {
+        "code" : "u15G",
+        "label" : "- 15 Gars",
+        "ageMax" : 14,
+        "ageMin" : 14,
         "genre" : "Homme",
-        "order" : NumberInt(8)
-    }, {
-        "code" : "u14",
-        "label" : "Moins de 14 Gars",
-        "ageMax" : NumberInt(13),
-        "ageMin" : NumberInt(12),
+        "order" : 9
+    },
+   {
+        "code" : "u15F",
+        "label" : "- 15 Filles",
+        "ageMax" : 14,
+        "ageMin" : 14,
+        "genre" : "Femme",
+        "order" : 10
+    }, 
+    {
+        "code" : "u14G",
+        "label" : "- 14 Gars",
+        "ageMax" : 13,
+        "ageMin" : 12,
         "genre" : "Homme",
-        "order" : NumberInt(9)
-    }, {
+        "order" : 11
+    }, 
+    {
         "code" : "u14F",
-        "label" : "Moins de 14 Fille",
-        "ageMax" : NumberInt(13),
-        "ageMin" : NumberInt(12),
+        "label" : "- 14 Fille",
+        "ageMax" : 13,
+        "ageMin" : 12,
         "genre" : "Femme",
-        "order" : NumberInt(10)
-    }, {
-        "code" : "u12",
-        "label" : "Moins de 12 Gars",
-        "ageMax" : NumberInt(11),
-        "ageMin" : NumberInt(10),
+        "order" : 12
+    },
+    {
+        "code" : "u13G",
+        "label" : "- 13 Gars",
+        "ageMax" : 12,
+        "ageMin" : 11,
         "genre" : "Homme",
-        "order" : NumberInt(11)
-    }, {
-        "code" : "u12F",
-        "label" : "Moins de 12 Fille",
-        "ageMax" : NumberInt(11),
-        "ageMin" : NumberInt(10),
+        "order" : 13
+    }, 
+    {
+        "code" : "u13F",
+        "label" : "- 13 Fille",
+        "ageMax" : 12,
+        "ageMin" : 11,
         "genre" : "Femme",
-        "order" : NumberInt(12)
-    }, {
+        "order" : 14
+    }, 
+    {
+        "code" : "u12G",
+        "label" : "- 12 Gars",
+        "ageMax" : 11,
+        "ageMin" : 10,
+        "genre" : "Homme",
+        "order" : 15
+    }, 
+    {
+        "code" : "u12F",
+        "label" : "- 12 Fille",
+        "ageMax" : 11,
+        "ageMin" : 10,
+        "genre" : "Femme",
+        "order" : 16
+    },
+    {
+        "code" : "u11G",
+        "label" : "- 11 Gars",
+        "ageMax" : 11,
+        "ageMin" : 10,
+        "genre" : "Homme",
+        "order" : 17
+    }, 
+    {
+        "code" : "u11F",
+        "label" : "- 11 Fille",
+        "ageMax" : 10,
+        "ageMin" : 9,
+        "genre" : "Femme",
+        "order" : 18
+    }, 
+    {
         "code" : "u10",
-        "label" : "Moins de 10",
-        "ageMax" : NumberInt(9),
-        "ageMin" : NumberInt(9),
+        "label" : "- 10",
+        "ageMax" : 9,
+        "ageMin" : 9,
         "genre" : "Mixte",
-        "order" : NumberInt(13)
-    }, {
+        "order" : 19
+    }, 
+    {
         "code" : "u09",
-        "label" : "Moins de 9",
-        "ageMax" : NumberInt(8),
-        "ageMin" : NumberInt(7),
+        "label" : "- 9",
+        "ageMax" : 8,
+        "ageMin" : 7,
         "genre" : "Mixte",
-        "order" : NumberInt(14)
+        "order" : 20
     } ],
     "listAvailabityStatus" : [ {
         "code" : "available",
