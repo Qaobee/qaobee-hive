@@ -296,4 +296,15 @@ public class StatisticsServiceImpl implements StatisticsService {
         }
         mongo.aggregate(pipelineAggregation, DBCollections.STATS, resultHandler);
     }
+
+    @Override
+    public void deletStatsForEventId(String eventId, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.delete(new JsonObject().put("eventId", eventId), DBCollections.STATS, deleteRes -> {
+            if (deleteRes.succeeded()) {
+                resultHandler.handle(Future.succeededFuture(new JsonObject().put("deleteCount", deleteRes.result())));
+            } else {
+                resultHandler.handle(Future.failedFuture(deleteRes.cause()));
+            }
+        });
+    }
 }

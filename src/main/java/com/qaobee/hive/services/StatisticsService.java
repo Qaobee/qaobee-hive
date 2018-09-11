@@ -40,7 +40,6 @@ public interface StatisticsService {
      * Create statistics service.
      *
      * @param vertx the vertx
-     *
      * @return the statistics service
      */
     static StatisticsService create(Vertx vertx) {
@@ -52,7 +51,6 @@ public interface StatisticsService {
      *
      * @param vertx   the vertx
      * @param address the address
-     *
      * @return the statistics service
      */
     static StatisticsService createProxy(Vertx vertx, String address) {
@@ -112,6 +110,14 @@ public interface StatisticsService {
      * @param resultHandler  the result handler
      */
     void getStatsGroupedBy(JsonArray listIndicators, JsonArray listOwners, Long startDate, // NOSONAR
-                                                                   Long endDate, String aggregate, JsonArray value, JsonArray shootSeqId,
-                                                                   JsonArray groupBy, JsonArray sortedBy, Integer limit, Handler<AsyncResult<JsonArray>> resultHandler);
+                           Long endDate, String aggregate, JsonArray value, JsonArray shootSeqId,
+                           JsonArray groupBy, JsonArray sortedBy, Integer limit, Handler<AsyncResult<JsonArray>> resultHandler);
+
+    /**
+     * Delet stats for event id.
+     *
+     * @param eventId       the event id
+     * @param resultHandler the result handler
+     */
+    void deletStatsForEventId(String eventId, Handler<AsyncResult<JsonObject>> resultHandler);
 }

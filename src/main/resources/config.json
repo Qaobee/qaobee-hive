@@ -22,19 +22,20 @@
         "FREEMIUM": {
           "price": 8,
           "price_y": 87
-        }/*,
-        "TEAMS": {
-          "price": 30,
-          "price_y": 324
-        },
-        "TEAMM": {
-          "price": 36,
-          "price_y": 389
-        },
-        "TEAMXL": {
-          "price": 48,
-          "price_y": 486
-        }*/
+        }
+        /*,
+                "TEAMS": {
+                  "price": 30,
+                  "price_y": 324
+                },
+                "TEAMM": {
+                  "price": 36,
+                  "price_y": 389
+                },
+                "TEAMXL": {
+                  "price": 48,
+                  "price_y": 486
+                }*/
       }
     },
     "cors": {
@@ -50,10 +51,12 @@
     },
     "mongo.db": {
       "host": "localhost",
-      "port": 27017,
+      "port": 27018,
       "maxPoolSize": 2,
       "keepAlive": true,
-      "db_name": "hive"
+      "db_name": "hive",
+      "username": "hive",
+      "password": "qaobee2016"
     },
     "mailchimp": {
       "env": "DEV",
@@ -90,12 +93,12 @@
       "project": "QHBWEB",
       "userName": "feedback"
     },
-    "warp10" : {
+    "warp10": {
       "port": 8080,
-      "host" :  "vps269267.ovh.net",
-      "path" : "/api/v0/",
-      "scheme" : "http",
-      "writeToken" : "M86jDlgrRF7zA9VJzbbsh35tZY1RtJNMrDYO2GN47v8YNjxAxjnvY4c6iLN8l2DYRUb_wPRDA.yutcnr2E3oz5TGb1bd.kuk4B3QDmfeRRzRkiTdeFvWCfIjC7ojpruN"
+      "host": "vps269267.ovh.net",
+      "path": "/api/v0/",
+      "scheme": "http",
+      "writeToken": "M86jDlgrRF7zA9VJzbbsh35tZY1RtJNMrDYO2GN47v8YNjxAxjnvY4c6iLN8l2DYRUb_wPRDA.yutcnr2E3oz5TGb1bd.kuk4B3QDmfeRRzRkiTdeFvWCfIjC7ojpruN"
     }
   },
   "REC": {
@@ -121,19 +124,20 @@
         "FREEMIUM": {
           "price": 8,
           "price_y": 87
-        }/*,
-        "TEAMS": {
-          "price": 30,
-          "price_y": 324
-        },
-        "TEAMM": {
-          "price": 36,
-          "price_y": 389
-        },
-        "TEAMXL": {
-          "price": 48,
-          "price_y": 486
-        } */
+        }
+        /*,
+                "TEAMS": {
+                  "price": 30,
+                  "price_y": 324
+                },
+                "TEAMM": {
+                  "price": 36,
+                  "price_y": 389
+                },
+                "TEAMXL": {
+                  "price": 48,
+                  "price_y": 486
+                } */
       }
     },
     "cors": {
@@ -188,12 +192,12 @@
       "project": "QHBWEB",
       "userName": "feedback"
     },
-    "warp10" : {
+    "warp10": {
       "port": 8080,
-      "host" :  "vps269267.ovh.net",
-      "path" : "/api/v0/",
-      "scheme" : "http",
-      "writeToken" : "M86jDlgrRF7zA9VJzbbsh35tZY1RtJNMrDYO2GN47v8YNjxAxjnvY4c6iLN8l2DYRUb_wPRDA.yutcnr2E3oz5TGb1bd.kuk4B3QDmfeRRzRkiTdeFvWCfIjC7ojpruN"
+      "host": "vps269267.ovh.net",
+      "path": "/api/v0/",
+      "scheme": "http",
+      "writeToken": "M86jDlgrRF7zA9VJzbbsh35tZY1RtJNMrDYO2GN47v8YNjxAxjnvY4c6iLN8l2DYRUb_wPRDA.yutcnr2E3oz5TGb1bd.kuk4B3QDmfeRRzRkiTdeFvWCfIjC7ojpruN"
     }
   },
   "PROD": {
@@ -219,19 +223,20 @@
         "FREEMIUM": {
           "price": 8,
           "price_y": 87
-        }/*,
-        "TEAMS": {
-          "price": 30,
-          "price_y": 324
-        },
-        "TEAMM": {
-          "price": 36,
-          "price_y": 389
-        },
-        "TEAMXL": {
-          "price": 48,
-          "price_y": 486
-        }*/
+        }
+        /*,
+                "TEAMS": {
+                  "price": 30,
+                  "price_y": 324
+                },
+                "TEAMM": {
+                  "price": 36,
+                  "price_y": 389
+                },
+                "TEAMXL": {
+                  "price": 48,
+                  "price_y": 486
+                }*/
       }
     },
     "cors": {
@@ -286,12 +291,12 @@
       "project": "QHBWEB",
       "userName": "feedback"
     },
-    "warp10" : {
+    "warp10": {
       "port": 8080,
-      "host" :  "vps269267.ovh.net",
-      "path" : "/api/v0/",
-      "scheme" : "http",
-      "writeToken" : "M86jDlgrRF7zA9VJzbbsh35tZY1RtJNMrDYO2GN47v8YNjxAxjnvY4c6iLN8l2DYRUb_wPRDA.yutcnr2E3oz5TGb1bd.kuk4B3QDmfeRRzRkiTdeFvWCfIjC7ojpruN"
+      "host": "vps269267.ovh.net",
+      "path": "/api/v0/",
+      "scheme": "http",
+      "writeToken": "M86jDlgrRF7zA9VJzbbsh35tZY1RtJNMrDYO2GN47v8YNjxAxjnvY4c6iLN8l2DYRUb_wPRDA.yutcnr2E3oz5TGb1bd.kuk4B3QDmfeRRzRkiTdeFvWCfIjC7ojpruN"
     }
   }
 }

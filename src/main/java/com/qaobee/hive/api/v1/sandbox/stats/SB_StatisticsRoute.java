@@ -95,7 +95,27 @@ public class SB_StatisticsRoute extends AbstractRoute {// NOSONAR
                 authHandler,
                 this::addBulk);
 
+
+        addRoute(router, "/", HttpMethod.DELETE,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, "eventId"),
+                this::deleteStatsForEvent);
+
         return router;
+    }
+
+    /**
+     * @api {delete} /api/1/sandbox/stats/statistics
+     * @apiVersion 0.1.0
+     * @apiName deleteStatsForEvent
+     * @apiGroup Statistics API
+     * @apiHeader {String} token
+     * @apiDescription delete statistics linked to an event
+     * @apiParam {String} eventId Mandatory The event id
+     * @apiSuccess {number}   deleteCount    The deleted count
+     */
+    private void deleteStatsForEvent(RoutingContext context) {
+        statisticsService.deletStatsForEventId(context.request().getParam("eventId"), handleResponse(context));
     }
 
     /**

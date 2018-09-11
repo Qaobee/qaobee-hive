@@ -124,4 +124,11 @@ public interface MongoDB {
      * @param resultHandler       the result handler
      */
     void aggregate(JsonArray pipelineAggregation, String collection, Handler<AsyncResult<JsonArray>> resultHandler);
+
+    /**
+     * @param query         query to select documents to delete
+     * @param collection    targeted collection
+     * @param resultHandler the result handler
+     */
+    void delete(JsonObject query, String collection, Handler<AsyncResult<Long>> resultHandler);
 }

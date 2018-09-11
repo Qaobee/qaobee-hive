@@ -165,4 +165,15 @@ public class MongoDBImpl implements MongoDB {
             }
         });
     }
+
+    @Override
+    public void delete(JsonObject query, String collection, Handler<AsyncResult<Long>> resultHandler) {
+        mongoClient.removeDocument(collection, query, res -> {
+            if (res.succeeded()) {
+                resultHandler.handle(Future.succeededFuture(res.result().getRemovedCount()));
+            } else {
+                resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause())));
+            }
+        });
+    }
 }
