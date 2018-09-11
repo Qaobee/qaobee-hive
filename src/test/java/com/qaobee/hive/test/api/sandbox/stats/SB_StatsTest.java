@@ -560,7 +560,7 @@ public class SB_StatsTest extends VertxJunitSupport {
 
             given().header(TOKEN, user.result().getAccount().getToken())
                     .queryParam("eventId", "12345")
-                    .when().delete(BASE_URL + "/")
+                    .when().delete(BASE_URL)
                     .then().assertThat().statusCode(200)
                     .body("deleteCount", is(10));
             async.complete();
@@ -573,7 +573,7 @@ public class SB_StatsTest extends VertxJunitSupport {
      */
     @Test
     public void deleteStatsWithNonLoggedUser() {
-        given().when().delete(BASE_URL + "/")
+        given().when().delete(BASE_URL)
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -583,7 +583,7 @@ public class SB_StatsTest extends VertxJunitSupport {
      */
     @Test
     public void deleteStatsWithWrongHttpMethod() {
-        given().when().post(BASE_URL + "/")
+        given().when().post(BASE_URL)
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -598,7 +598,7 @@ public class SB_StatsTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().setHandler(user -> {
             given().header(TOKEN, user.result().getAccount().getToken())
-                    .when().delete(BASE_URL + "/")
+                    .when().delete(BASE_URL)
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
