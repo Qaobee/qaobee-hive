@@ -327,7 +327,7 @@ public class SB_StatsTest extends VertxJunitSupport {
                     .put(PARAM_END_DATE, 1451516400000L)
                     .put(PARAM_INDICATOR_CODE, new JsonArray().add("originShootAtt"))
                     .put(PARAM_LIST_OWNERS, new JsonArray().add("5f82c510-2c89-46b0-b87d-d3b59e748615"));
-            List<String> mandatoryParams = Arrays.asList( PARAM_AGGREGAT, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE);
+            List<String> mandatoryParams = Arrays.asList(PARAM_AGGREGAT, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE);
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
@@ -526,6 +526,86 @@ public class SB_StatsTest extends VertxJunitSupport {
                 .body(STATUS, is(false));
     }
 
+
+    /**
+     * Delete stats.
+     *
+     * @param context the context
+     */
+    @Test
+    public void deleteStats(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().setHandler(user -> {
+            JsonArray stats = new JsonArray();
+            for (int i = 0; i < 5; i++) {
+                stats.add(generateStat(user.result(), "fake", i));
+            }
+
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(stats.encode())
+                    .when().put(BASE_URL + "/addBulk")
+                    .then().assertThat().statusCode(200)
+                    .body("count", notNullValue())
+                    .body("count", is(5));
+
+            for (int i = 0; i < 5; i++) {
+                stats.add(generateStat(user.result(), "fake", i));
+            }
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(stats.encode())
+                    .when().put(BASE_URL + "/addBulk")
+                    .then().assertThat().statusCode(200)
+                    .body("count", notNullValue())
+                    .body("count", is(5));
+
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .queryParam("eventId", "12345")
+                    .when().delete(BASE_URL + "/")
+                    .then().assertThat().statusCode(200)
+                    .body("deleteCount", is(10));
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
+    /**
+     * Delete stats with non logged user.
+     */
+    @Test
+    public void deleteStatsWithNonLoggedUser() {
+        given().when().delete(BASE_URL + "/")
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    /**
+     * Delete stats with wrong http method.
+     */
+    @Test
+    public void deleteStatsWithWrongHttpMethod() {
+        given().when().post(BASE_URL + "/")
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
+    }
+
+    /**
+     * Delete stats without event id.
+     *
+     * @param context the context
+     */
+    @Test
+    public void deleteStatsWithoutEventId(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .when().delete(BASE_URL + "/")
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
     private JsonObject generateStat(User u, String indicator, int chrono, String value) {
         try {
             Thread.sleep(10); // NOSONAR
@@ -541,7 +621,7 @@ public class SB_StatsTest extends VertxJunitSupport {
                 .put("eventId", "12345")
                 .put("shootSeqId", "12345")
                 .put("code", indicator)
-                .put("owner",new JsonArray().add(u.get_id()))
+                .put("owner", new JsonArray().add(u.get_id()))
                 .put("producter", new JsonArray().add(u.get_id()));
     }
 
