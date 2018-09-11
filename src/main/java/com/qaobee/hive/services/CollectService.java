@@ -38,7 +38,6 @@ public interface CollectService {
      * Create collect service.
      *
      * @param vertx the vertx
-     *
      * @return the collect service
      */
     static CollectService create(Vertx vertx) {
@@ -50,7 +49,6 @@ public interface CollectService {
      *
      * @param vertx   the vertx
      * @param address the address
-     *
      * @return the collect service
      */
     static CollectService createProxy(Vertx vertx, String address) {
@@ -92,4 +90,20 @@ public interface CollectService {
      * @param resultHandler the result handler
      */
     void getList(JsonObject params, Handler<AsyncResult<JsonArray>> resultHandler);
+
+    /**
+     * Delete collect by event id.
+     *
+     * @param eventId       the event id
+     * @param resultHandler the result handler
+     */
+    void deleteCollectByEventId(String eventId, Handler<AsyncResult<JsonObject>> resultHandler);
+
+    /**
+     * Delete collect by id.
+     *
+     * @param id            the id
+     * @param resultHandler the result handler
+     */
+    void deleteCollectById(String id, Handler<AsyncResult<JsonObject>> resultHandler);
 }

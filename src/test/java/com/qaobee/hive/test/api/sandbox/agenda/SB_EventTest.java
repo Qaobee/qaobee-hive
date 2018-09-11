@@ -43,6 +43,8 @@ public class SB_EventTest extends VertxJunitSupport {
 
     /**
      * Add event.
+     *
+     * @param context the context
      */
     @Test
     public void addEvent(TestContext context) {
@@ -103,6 +105,8 @@ public class SB_EventTest extends VertxJunitSupport {
 
     /**
      * Add event with missing params.
+     *
+     * @param context the context
      */
     @Test
     public void addEventWithMissingParams(TestContext context) {
@@ -137,6 +141,8 @@ public class SB_EventTest extends VertxJunitSupport {
 
     /**
      * Gets list event.
+     *
+     * @param context the context
      */
     @Test
     public void getListEvent(TestContext context) {
@@ -209,6 +215,8 @@ public class SB_EventTest extends VertxJunitSupport {
 
     /**
      * Gets list event with missing parameters.
+     *
+     * @param context the context
      */
     @Test
     public void getListEventWithMissingParameters(TestContext context) {
@@ -240,6 +248,8 @@ public class SB_EventTest extends VertxJunitSupport {
 
     /**
      * Gets event by id.
+     *
+     * @param context the context
      */
     @Test
     public void getEventById(TestContext context) {
@@ -279,6 +289,8 @@ public class SB_EventTest extends VertxJunitSupport {
 
     /**
      * Gets event by id with missing parameters.
+     *
+     * @param context the context
      */
     @Test
     public void getEventByIdWithMissingParameters(TestContext context) {
@@ -296,6 +308,8 @@ public class SB_EventTest extends VertxJunitSupport {
 
     /**
      * Gets event by id with wrong parameters.
+     *
+     * @param context the context
      */
     @Test
     public void getEventByIdWithWrongParameters(TestContext context) {
@@ -314,6 +328,8 @@ public class SB_EventTest extends VertxJunitSupport {
 
     /**
      * Update event.
+     *
+     * @param context the context
      */
     @Test
     public void updateEvent(TestContext context) {
@@ -368,6 +384,8 @@ public class SB_EventTest extends VertxJunitSupport {
 
     /**
      * Update event with missing params.
+     *
+     * @param context the context
      */
     @Test
     public void updateEventWithMissingParams(TestContext context) {
@@ -391,6 +409,73 @@ public class SB_EventTest extends VertxJunitSupport {
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
+    /**
+     * Delete event by id.
+     *
+     * @param context the context
+     */
+    @Test
+    public void deleteEventById(TestContext context) {
+        Async async = context.async();
+        populate(POPULATE_ONLY, DATA_EVENT_HAND);
+        generateLoggedUser().setHandler(user -> {
+            JsonObject event = new JsonObject(given().header(TOKEN, user.result().getAccount().getToken())
+                    .queryParam(SB_EventRoute.PARAM_ID, "55847ed0d040353767a48e68")
+                    .when().get(BASE_URL + "/get")
+                    .then().assertThat().statusCode(200)
+                    .body(PARAM_LABEL, notNullValue())
+                    .body(PARAM_LABEL, is("Amical"))
+            .extract().asString());
+
+
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .queryParam("_id", event.getString("_id"))
+                    .when().delete(BASE_URL)
+                    .then().assertThat().statusCode(200)
+                    .body("event", is(1));
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
+    /**
+     * Delete event with non logged user.
+     */
+    @Test
+    public void deleteEventWithNonLoggedUser() {
+        given().when().delete(BASE_URL)
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    /**
+     * Delete event with wrong http method.
+     */
+    @Test
+    public void deleteEventWithWrongHttpMethod() {
+        given().when().post(BASE_URL)
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
+    }
+
+    /**
+     * Delete event without event id.
+     *
+     * @param context the context
+     */
+    @Test
+    public void deleteEventWithoutEventId(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .when().delete(BASE_URL)
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
         });
         async.await(TIMEOUT);

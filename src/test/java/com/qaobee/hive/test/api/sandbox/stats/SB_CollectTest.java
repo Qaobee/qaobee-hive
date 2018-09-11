@@ -42,8 +42,11 @@ import static org.hamcrest.Matchers.*;
 public class SB_CollectTest extends VertxJunitSupport {
     private static final String EVENT_BASE_URL = getBaseURL("/sandbox/event/event");
     private static final String BASE_URL = getBaseURL("/sandbox/stats/collect");
+
     /**
      * Add collect.
+     *
+     * @param context the context
      */
     @Test
     public void addCollect(TestContext context) {
@@ -94,6 +97,8 @@ public class SB_CollectTest extends VertxJunitSupport {
 
     /**
      * Add Collect with missing parameters.
+     *
+     * @param context the context
      */
     @Test
     public void addCollectWithMissingParameters(TestContext context) {
@@ -129,6 +134,8 @@ public class SB_CollectTest extends VertxJunitSupport {
 
     /**
      * Update collect.
+     *
+     * @param context the context
      */
     @Test
     public void updateCollect(TestContext context) {
@@ -188,6 +195,8 @@ public class SB_CollectTest extends VertxJunitSupport {
 
     /**
      * Update collect with missing parameters.
+     *
+     * @param context the context
      */
     @Test
     public void updateCollectWithMissingParameters(TestContext context) {
@@ -232,6 +241,8 @@ public class SB_CollectTest extends VertxJunitSupport {
 
     /**
      * Gets list Collect.
+     *
+     * @param context the context
      */
     @Test
     public void getListCollect(TestContext context) {
@@ -287,6 +298,8 @@ public class SB_CollectTest extends VertxJunitSupport {
 
     /**
      * Gets list Collect with missing parameters.
+     *
+     * @param context the context
      */
     @Test
     public void getListCollectWithMissingParameters(TestContext context) {
@@ -315,6 +328,8 @@ public class SB_CollectTest extends VertxJunitSupport {
 
     /**
      * Gets Collect by id.
+     *
+     * @param context the context
      */
     @Test
     public void getCollectById(TestContext context) {
@@ -355,6 +370,8 @@ public class SB_CollectTest extends VertxJunitSupport {
 
     /**
      * Gets Collect by id with missing parameters.
+     *
+     * @param context the context
      */
     @Test
     public void getCollectByIdWithMissingParameters(TestContext context) {
@@ -362,6 +379,123 @@ public class SB_CollectTest extends VertxJunitSupport {
         generateLoggedUser().setHandler(user -> {
             given().header(TOKEN, user.result().getAccount().getToken())
                     .when().get(BASE_URL + "/get")
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
+    /**
+     * Delete collect by collect id.
+     *
+     * @param context the context
+     */
+    @Test
+    public void deleteCollectByCollectId(TestContext context) {
+        Async async = context.async();
+        populate(POPULATE_ONLY, DATA_USER_QAOBEE, DATA_SANDBOXES_HAND, DATA_EVENT_HAND);
+        generateLoggedUser().setHandler(user -> {
+            JsonObject event = new JsonObject(
+                    given().header(TOKEN, user.result().getAccount().getToken())
+                            .queryParam(SB_EventRoute.PARAM_ID, "55847ed0d040353767a48e68")
+                            .when().get(EVENT_BASE_URL + "/get")
+                            .then().assertThat().statusCode(200)
+                            .body(SB_EventRoute.PARAM_LABEL, notNullValue())
+                            .body("activityId", is("ACT-HAND"))
+                            .extract().asString());
+
+            final JsonObject Collect = generateCollect(event);
+
+            JsonObject collect = new JsonObject( given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(Collect.encode())
+                    .when().post(BASE_URL + "/add")
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("eventRef.address.city", is("Brest"))
+                    .extract().asString());
+
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .queryParam("_id", collect.getString("_id"))
+                    .when().delete(BASE_URL)
+                    .then().assertThat().statusCode(200)
+                    .body("collect", is(1));
+
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
+    /**
+     * Delete event by collect id.
+     *
+     * @param context the context
+     */
+    @Test
+    public void deleteEventByCollectId(TestContext context) {
+        Async async = context.async();
+        populate(POPULATE_ONLY, DATA_USER_QAOBEE, DATA_SANDBOXES_HAND, DATA_EVENT_HAND);
+        generateLoggedUser().setHandler(user -> {
+            JsonObject event = new JsonObject(
+                    given().header(TOKEN, user.result().getAccount().getToken())
+                            .queryParam(SB_EventRoute.PARAM_ID, "55847ed0d040353767a48e68")
+                            .when().get(EVENT_BASE_URL + "/get")
+                            .then().assertThat().statusCode(200)
+                            .body(SB_EventRoute.PARAM_LABEL, notNullValue())
+                            .body("activityId", is("ACT-HAND"))
+                            .extract().asString());
+
+            final JsonObject Collect = generateCollect(event);
+
+             given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(Collect.encode())
+                    .when().post(BASE_URL + "/add")
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("eventRef.address.city", is("Brest"));
+
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .queryParam("eventId", event.getString("_id"))
+                    .when().delete(BASE_URL)
+                    .then().assertThat().statusCode(200)
+                    .body("collect", is(1));
+
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
+    /**
+     * Delete collect with non logged user.
+     */
+    @Test
+    public void deleteCollectWithNonLoggedUser() {
+        given().when().delete(BASE_URL)
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    /**
+     * Delete collect with wrong http method.
+     */
+    @Test
+    public void deleteCollectWithWrongHttpMethod() {
+        given().when().post(BASE_URL)
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
+    }
+
+    /**
+     * Delete collect without event id and collect id.
+     *
+     * @param context the context
+     */
+    @Test
+    public void deleteCollectWithoutEventIdAndCollectId(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .when().delete(BASE_URL)
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();

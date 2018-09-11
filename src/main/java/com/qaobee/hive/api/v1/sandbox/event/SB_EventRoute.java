@@ -20,7 +20,9 @@
 package com.qaobee.hive.api.v1.sandbox.event;
 
 import com.qaobee.hive.api.v1.Module;
+import com.qaobee.hive.services.CollectService;
 import com.qaobee.hive.services.EventService;
+import com.qaobee.hive.services.StatisticsService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
@@ -87,6 +89,10 @@ public class SB_EventRoute extends AbstractRoute { // NOSONAR
     public static final String PARAM_LIMIT_RESULT = "limitResult";
     @Inject
     private EventService eventService;
+    @Inject
+    private CollectService collectService;
+    @Inject
+    private StatisticsService statisticsService;
 
     @Override
     public Router init() {
@@ -112,7 +118,46 @@ public class SB_EventRoute extends AbstractRoute { // NOSONAR
                 c -> mandatoryHandler.testRequestParams(c, PARAM_ID),
                 this::getEvent);
 
+        addRoute(router, "/", HttpMethod.DELETE,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ID),
+                this::deleteEvent);
+
         return router;
+    }
+
+    /**
+     * @apiDescription Delete Event, Collects and stats by the event Id
+     * @api {delete} /api/1/sandbox/event/event/ Delete Event, Collects and stats by the event Id
+     * @apiName deleteEvent
+     * @apiGroup Event API
+     * @apiHeader {String} token
+     * @apiParam {String} _id event Id
+     * @apiSuccess {Object}   deleteCount    The deleted count
+     */
+    private void deleteEvent(RoutingContext context) {
+        eventService.deleteEvent(context.request().getParam(PARAM_ID), res -> {
+            if (res.succeeded()) {
+                JsonObject result = new JsonObject().put("event", res.result().getInteger("deleteCount"));
+                collectService.deleteCollectByEventId(context.request().getParam(PARAM_ID), delCollectRes -> {
+                    if (delCollectRes.succeeded()) {
+                        result.put("collects", delCollectRes.result().getInteger("deleteCount"));
+                        statisticsService.deleteStatsForEventId(context.request().getParam(PARAM_ID), delStatsRes -> {
+                            if (delStatsRes.succeeded()) {
+                                result.put("stats", delStatsRes.result().getInteger("deleteCount"));
+                                handleResponse(context, result);
+                            } else {
+                                utils.handleError(context, delStatsRes.cause());
+                            }
+                        });
+                    } else {
+                        utils.handleError(context, delCollectRes.cause());
+                    }
+                });
+            } else {
+                utils.handleError(context, res.cause());
+            }
+        });
     }
 
     /**
@@ -121,7 +166,7 @@ public class SB_EventRoute extends AbstractRoute { // NOSONAR
      * @apiName getEvent
      * @apiGroup Event API
      * @apiHeader {String} token
-     * @apiParam {String} id
+     * @apiParam {String} _id
      * @apiSuccess {Object} event event;
      */
     private void getEvent(RoutingContext context) {

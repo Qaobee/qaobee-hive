@@ -298,7 +298,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public void deletStatsForEventId(String eventId, Handler<AsyncResult<JsonObject>> resultHandler) {
+    public void deleteStatsForEventId(String eventId, Handler<AsyncResult<JsonObject>> resultHandler) {
         mongo.delete(new JsonObject().put("eventId", eventId), DBCollections.STATS, deleteRes -> {
             if (deleteRes.succeeded()) {
                 resultHandler.handle(Future.succeededFuture(new JsonObject().put("deleteCount", deleteRes.result())));

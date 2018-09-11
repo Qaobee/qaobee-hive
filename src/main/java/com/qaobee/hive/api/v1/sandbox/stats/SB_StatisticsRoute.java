@@ -115,7 +115,7 @@ public class SB_StatisticsRoute extends AbstractRoute {// NOSONAR
      * @apiSuccess {number}   deleteCount    The deleted count
      */
     private void deleteStatsForEvent(RoutingContext context) {
-        statisticsService.deletStatsForEventId(context.request().getParam("eventId"), handleResponse(context));
+        statisticsService.deleteStatsForEventId(context.request().getParam("eventId"), handleResponse(context));
     }
 
     /**

@@ -24,7 +24,6 @@ import com.qaobee.hive.api.v1.sandbox.stats.SB_CollectRoute;
 import com.qaobee.hive.services.CollectService;
 import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.services.NotificationsService;
-import com.qaobee.hive.services.Warp10Service;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.tools.Messages;
@@ -124,5 +123,28 @@ public class CollectServiceImpl implements CollectService {
         JsonObject match = new JsonObject().put("$match", dbObjectParent);
         JsonArray pipelineAggregation = new JsonArray().add(match);
         mongo.aggregate(pipelineAggregation, DBCollections.COLLECT, resultHandler);
+    }
+
+
+    @Override
+    public void deleteCollectByEventId(String eventId, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.delete(new JsonObject().put("eventRef._id", eventId), DBCollections.COLLECT, deleteRes -> {
+            if (deleteRes.succeeded()) {
+                resultHandler.handle(Future.succeededFuture(new JsonObject().put("deleteCount", deleteRes.result())));
+            } else {
+                resultHandler.handle(Future.failedFuture(deleteRes.cause()));
+            }
+        });
+    }
+
+    @Override
+    public void deleteCollectById(String id, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.delete(new JsonObject().put("_id", id), DBCollections.COLLECT, deleteRes -> {
+            if (deleteRes.succeeded()) {
+                resultHandler.handle(Future.succeededFuture(new JsonObject().put("deleteCount", deleteRes.result())));
+            } else {
+                resultHandler.handle(Future.failedFuture(deleteRes.cause()));
+            }
+        });
     }
 }

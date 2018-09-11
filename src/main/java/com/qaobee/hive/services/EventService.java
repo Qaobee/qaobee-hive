@@ -39,7 +39,6 @@ public interface EventService {
      * Create event service.
      *
      * @param vertx the vertx
-     *
      * @return the event service
      */
     static EventService create(Vertx vertx) {
@@ -51,7 +50,6 @@ public interface EventService {
      *
      * @param vertx   the vertx
      * @param address the address
-     *
      * @return the event service
      */
     static EventService createProxy(Vertx vertx, String address) {
@@ -93,4 +91,12 @@ public interface EventService {
      * @param resultHandler the result handler
      */
     void getEventList(JsonObject params, Handler<AsyncResult<JsonArray>> resultHandler);
+
+    /**
+     * Delete event.
+     *
+     * @param eventId       the event id
+     * @param resultHandler the result handler
+     */
+    void deleteEvent(String eventId, Handler<AsyncResult<JsonObject>> resultHandler);
 }

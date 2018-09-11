@@ -20,7 +20,10 @@ package com.qaobee.hive.api.v1.sandbox.stats;
 
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.CollectService;
+import com.qaobee.hive.services.StatisticsService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
@@ -75,6 +78,8 @@ public class SB_CollectRoute extends AbstractRoute {// NOSONAR
 
     @Inject
     private CollectService collectService;
+    @Inject
+    private StatisticsService statisticsService;
 
     @Override
     public Router init() {
@@ -95,13 +100,72 @@ public class SB_CollectRoute extends AbstractRoute {// NOSONAR
                 c -> mandatoryHandler.testBodyParams(c, PARAM_EVENT, PARAM_PLAYERS),
                 this::update);
 
-
         addRoute(router, "/get", HttpMethod.GET,
                 authHandler,
                 c -> mandatoryHandler.testRequestParams(c, PARAM_ID),
                 this::get);
 
+        addRoute(router, "/", HttpMethod.DELETE,
+                authHandler,
+                this::delete);
+
         return router;
+    }
+
+    /**
+     * @apiDescription Delete Collect by its Id or by event id (delete also stats)
+     * @api {delete} /api/1/sandbox/stats/collect/ Delete Collect by its Id or by event id (delete also stats)
+     * @apiName delete
+     * @apiGroup Collect API
+     * @apiParam {String} _id (optional) Collect id
+     * @apiParam {String} eventId (optional) Event id
+     * @apiHeader {String} token
+     * @apiSuccess {Object} deleteCount    The deleted count
+     */
+    private void delete(RoutingContext context) {
+        // delete collect by its id
+        if (null != context.request().getParam("_id")) {
+            collectService.get(context.request().getParam("_id"), getRes -> {
+                if (getRes.succeeded()) {
+                    String eventId = getRes.result().getJsonObject("eventRef").getString("_id");
+                    collectService.deleteCollectById(context.request().getParam("_id"), res -> {
+                        if (res.succeeded()) {
+                            JsonObject result = new JsonObject().put("collect", res.result().getInteger("deleteCount"));
+                            statisticsService.deleteStatsForEventId(eventId, delRes -> {
+                                if (delRes.succeeded()) {
+                                    result.put("stats", delRes.result().getInteger("deleteCount"));
+                                    handleResponse(context, result);
+                                } else {
+                                    utils.handleError(context, delRes.cause());
+                                }
+                            });
+                        } else {
+                            utils.handleError(context, res.cause());
+                        }
+                    });
+                } else {
+                    utils.handleError(context, getRes.cause());
+                }
+            });
+        } else if (null != context.request().getParam("eventId")) {
+            collectService.deleteCollectByEventId(context.request().getParam("eventId"), res -> {
+                if (res.succeeded()) {
+                    JsonObject result = new JsonObject().put("collect", res.result().getInteger("deleteCount"));
+                    statisticsService.deleteStatsForEventId(context.request().getParam("eventId"), delRes -> {
+                        if (delRes.succeeded()) {
+                            result.put("stats", delRes.result().getInteger("deleteCount"));
+                            handleResponse(context, result);
+                        } else {
+                            utils.handleError(context, delRes.cause());
+                        }
+                    });
+                } else {
+                    utils.handleError(context, res.cause());
+                }
+            });
+        } else {
+            utils.handleError(context, new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "Missing collect id (_id) or event id (eventId)"));
+        }
     }
 
     /**

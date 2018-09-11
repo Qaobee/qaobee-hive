@@ -150,4 +150,15 @@ public class EventServiceImpl implements EventService {
         }
         mongo.aggregate(pipelineAggregation, DBCollections.EVENT, resultHandler);
     }
+
+    @Override
+    public void deleteEvent(String eventId, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.delete(new JsonObject().put("_id", eventId), DBCollections.EVENT, deleteRes -> {
+            if (deleteRes.succeeded()) {
+                resultHandler.handle(Future.succeededFuture(new JsonObject().put("deleteCount", deleteRes.result())));
+            } else {
+                resultHandler.handle(Future.failedFuture(deleteRes.cause()));
+            }
+        });
+    }
 }

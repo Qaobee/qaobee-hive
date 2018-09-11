@@ -119,5 +119,5 @@ public interface StatisticsService {
      * @param eventId       the event id
      * @param resultHandler the result handler
      */
-    void deletStatsForEventId(String eventId, Handler<AsyncResult<JsonObject>> resultHandler);
+    void deleteStatsForEventId(String eventId, Handler<AsyncResult<JsonObject>> resultHandler);
 }
