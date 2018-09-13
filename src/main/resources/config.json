@@ -51,12 +51,10 @@
     },
     "mongo.db": {
       "host": "localhost",
-      "port": 27018,
+      "port": 27017,
       "maxPoolSize": 2,
       "keepAlive": true,
-      "db_name": "hive",
-      "username": "hive",
-      "password": "qaobee2016"
+      "db_name": "hive"
     },
     "mailchimp": {
       "env": "DEV",
