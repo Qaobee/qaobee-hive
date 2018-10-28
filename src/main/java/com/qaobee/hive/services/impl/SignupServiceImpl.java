@@ -27,6 +27,8 @@ import com.qaobee.hive.business.model.commons.users.account.AccountStatus;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
 import com.qaobee.hive.business.model.sandbox.effective.Availability;
+import com.qaobee.hive.business.model.sandbox.effective.Laterality;
+import com.qaobee.hive.business.model.sandbox.effective.PositionType;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Effective;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Team;
@@ -231,19 +233,20 @@ public class SignupServiceImpl implements SignupService {
         List<Future> promises = new ArrayList<>();
         for (int qte = 0; qte < player.getInteger("quantity", 0); qte++) {
             SB_Person sbPerson = new SB_Person();
-            sbPerson.setFirstname("Numero " + (listPersonsId.size() + 1));
-            sbPerson.setName("Joueur");
+            sbPerson.setFirstname("Prénom " + (listPersonsId.size() + 1));
+            sbPerson.setName("Nom" + (listPersonsId.size() + 1));
             sbPerson.setSandboxId(sbSandBox.get_id());
             sbPerson.setContact(new Contact());
             Status status = new Status();
             status.setAvailability(new Availability("available", "available"));
             status.setHeight(RANDOM.nextInt(30) + 150);
-            status.setLaterality(Math.random() > 0.5 ? "right-handed" : "left-handed");
+            status.setLaterality(Math.random() > 0.5 ? new Laterality("right-handed","Droitier",new Double("1.0")) 
+            : new Laterality("left-handed","Gaucher",new Double("2.0")));
             status.setStateForm("good");
             status.setWeight(RANDOM.nextInt(20) + 70);
             sbPerson.setStatus(status);
             sbPerson.getStatus().setSquadnumber(listPersonsId.size() + 1);
-            sbPerson.getStatus().setPositionType(player.getString("positionType"));
+            sbPerson.getStatus().setPositionType(new PositionType(player.getString("positionType")));
             Future<String> d = Future.future();
             mongo.upsert(new JsonObject(Json.encode(sbPerson)), DBCollections.PERSON, ar -> {
                 if (ar.succeeded()) {

@@ -21,6 +21,8 @@ package com.qaobee.hive.business.model.transversal;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.sandbox.effective.Availability;
+import com.qaobee.hive.business.model.sandbox.effective.Laterality;
+import com.qaobee.hive.business.model.sandbox.effective.PositionType;
 
 /**
  * The type Status.
@@ -49,11 +51,11 @@ public class Status {
     /**
      * Position type
      */
-    private String positionType;
+    private PositionType positionType;
     /**
      * Laterality
      */
-    private String laterality;
+    private Laterality laterality;
     /**
      * Availability
      */
@@ -134,18 +136,18 @@ public class Status {
     /**
      * Returns the position type.
      *
-     * @return String : position type
+     * @return PositionType : position type
      */
-    public String getPositionType() {
+    public PositionType getPositionType() {
         return positionType;
     }
 
     /**
      * Defines the position type.
      *
-     * @param positionType (String) : position type
+     * @param positionType (PositionType) : position type
      */
-    public void setPositionType(String positionType) {
+    public void setPositionType(PositionType positionType) {
         this.positionType = positionType;
     }
 
@@ -154,16 +156,16 @@ public class Status {
      *
      * @return String : laterality
      */
-    public String getLaterality() {
+    public Laterality getLaterality() {
         return laterality;
     }
 
     /**
      * Defines the laterality.
      *
-     * @param laterality (String)  : laterality
+     * @param laterality (Laterality)  : laterality
      */
-    public void setLaterality(String laterality) {
+    public void setLaterality(Laterality laterality) {
         this.laterality = laterality;
     }
 
