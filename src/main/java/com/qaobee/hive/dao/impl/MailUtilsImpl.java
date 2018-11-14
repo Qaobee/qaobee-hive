@@ -62,7 +62,7 @@ public final class MailUtilsImpl implements MailUtils {
     public JsonObject generateActivationBody(final User user, final String locale) {
         return new JsonObject()
                 .put(TITLE_FIELD, Messages.getString("mail.account.validation.title", locale))
-                .put(SALUTATION_FIELD, Messages.getString("mail.account.validation.line.1", locale, user.getFirstname()))
+                .put(SALUTATION_FIELD, Messages.getString("mail.account.validation.line.1", locale, user.getFirstname() != null ? user.getFirstname() : ""))
                 .put("desc", Messages.getString("mail.account.validation.line.2", locale))
                 .put(HEADER_FIELD, Messages.getString("mail.account.validation.title", locale))
                 .put(SUB_HEADER_FIELD, "")
@@ -78,7 +78,7 @@ public final class MailUtilsImpl implements MailUtils {
     public JsonObject generateNewpasswdBody(final User user, final String locale) {
         return new JsonObject()
                 .put(TITLE_FIELD, Messages.getString("mail.account.newpasswd.title", locale))
-                .put(SALUTATION_FIELD, Messages.getString("mail.account.newpasswd.line.1", locale, user.getFirstname()))
+                .put(SALUTATION_FIELD, Messages.getString("mail.account.newpasswd.line.1", locale, user.getFirstname() != null ? user.getFirstname() : ""))
                 .put(HEADER_FIELD, Messages.getString("mail.account.newpasswd.title", locale))
                 .put(SUB_HEADER_FIELD, "")
                 .put(MESSAGE_FIELD, Messages.getString("mail.account.newpasswd.line.2", locale))
@@ -134,7 +134,7 @@ public final class MailUtilsImpl implements MailUtils {
         final JsonObject json = new JsonObject()
                 .put(TITLE_FIELD, Messages.getString("mail.account.sharingSB.title", locale))
                 .put(SALUTATION_FIELD, Messages.getString("mail.account.sharingSB.line.1", locale))
-                .put("desc", Messages.getString("mail.account.sharingSB.line.2", locale, user.getFirstname() + " " + user.getName()))
+                .put("desc", Messages.getString("mail.account.sharingSB.line.2", locale, (user.getFirstname() != null ? user.getFirstname() : "") + " " + (user.getName() != null ? user.getName() : "")))
                 .put(MESSAGE_FIELD, Messages.getString("mail.account.sharingSB.line.3", locale));
         if ("internal".equals(target)) {
             json.put(ACTIVATION_LINK_FIELD, runtime.getString(SITE_URL_KEY)
