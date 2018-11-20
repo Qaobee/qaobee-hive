@@ -99,6 +99,7 @@ public class SignupServiceImpl implements SignupService {
     }
 
     private void checkUserInformations(JsonObject userJson, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+        userJson.remove("country");
         final User user = Json.decodeValue(userJson.encode(), User.class);
         // Check user informations
         userService.checkUserInformations(userJson, locale, ar -> {

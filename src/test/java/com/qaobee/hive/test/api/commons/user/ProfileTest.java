@@ -151,7 +151,7 @@ public class ProfileTest extends VertxJunitSupport {
     /**
      * Generate profile pdf.
      */
-    @Test
+    @Test(timeout = 10000L)
     public void generateProfilePDF(TestContext context) {
         Async async = context.async();
         generateLoggedUser().setHandler(u -> {
