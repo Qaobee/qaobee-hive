@@ -38,10 +38,6 @@ public class SeasonRoute extends AbstractRoute {
      * Activity ID
      */
     public static final String PARAM_ACTIVITY_ID = "activityId";
-    /**
-     * Country ID
-     */
-    public static final String PARAM_COUNTRY_ID = "countryId";
     @Inject
     private SeasonService seasonService;
 
@@ -56,12 +52,12 @@ public class SeasonRoute extends AbstractRoute {
 
         addRoute(router, "/getListByActivity", HttpMethod.GET,
                 authHandler,
-                c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID),
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID),
                 this::getListByActivity);
 
         addRoute(router, "/current", HttpMethod.GET,
                 authHandler,
-                c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID),
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID),
                 this::getCurrentSeason);
 
         return router;
@@ -79,7 +75,7 @@ public class SeasonRoute extends AbstractRoute {
      * @apiSuccess {Object} seasons com.qaobee.hive.business.model.commons.settings.Season
      */
     private void getCurrentSeason(RoutingContext context) {
-        seasonService.getCurrentSeason(context.request().getParam(PARAM_ACTIVITY_ID), context.request().getParam(PARAM_COUNTRY_ID), handleResponse(context));
+        seasonService.getCurrentSeason(context.request().getParam(PARAM_ACTIVITY_ID), handleResponse(context));
     }
 
     /**
@@ -94,7 +90,7 @@ public class SeasonRoute extends AbstractRoute {
      * @apiSuccess {Array} seasons com.qaobee.hive.business.model.commons.settings.Season
      */
     private void getListByActivity(RoutingContext context) {
-        seasonService.getListByActivity(context.request().getParam(PARAM_ACTIVITY_ID), context.request().getParam(PARAM_COUNTRY_ID), handleResponseArray(context));
+        seasonService.getListByActivity(context.request().getParam(PARAM_ACTIVITY_ID), handleResponseArray(context));
     }
 
     /**

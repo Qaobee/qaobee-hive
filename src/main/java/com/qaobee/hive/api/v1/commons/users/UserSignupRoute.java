@@ -53,9 +53,7 @@ public class UserSignupRoute extends AbstractSignup {
     public Router init() {
         Router router = Router.router(vertx);
         addRoute(router, "/test/:login", HttpMethod.GET, this::loginTest);
-        addRoute(router, "/register", HttpMethod.PUT,
-                c -> mandatoryHandler.testBodyParams(c, PARAM_CAPTCHA, "country"),
-                this::registerUser);
+        addRoute(router, "/register", HttpMethod.PUT, this::registerUser);
 
         addRoute(router, "/accountcheck/:id/:code", HttpMethod.GET, this::accountCheck);
         addRoute(router, "/firstconnectioncheck/:id/:code", HttpMethod.GET, this::firstConnectionCheck);
@@ -131,9 +129,7 @@ public class UserSignupRoute extends AbstractSignup {
      */
     private void registerUser(RoutingContext context) {
         JsonObject userJson = context.getBodyAsJson();
-        String country = userJson.getString("country");
-        userJson.remove("country");
-        signupService.register(context.getBodyAsJson().getString(PARAM_CAPTCHA), userJson, country, getLocale(context), u -> {
+        signupService.register(context.getBodyAsJson().getString(PARAM_CAPTCHA), userJson, getLocale(context), u -> {
             if (u.succeeded()) {
                 JsonObject user = u.result().getJsonObject("person");
                 signupService.sendRegisterMail(user, getLocale(context), r -> sendRegisterMail(u.result(), user, r, context));

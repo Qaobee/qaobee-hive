@@ -258,32 +258,6 @@ public class SeasonServiceTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets current season with wrong parameter testBodyParams.
-     */
-    @Test
-    public void getCurrentSeasonWithWrongParameterTest(TestContext context) {
-        Async async = context.async();
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
-        generateLoggedUser().setHandler(u -> getCountry("CNTR-250-FR-FRA").setHandler(country -> getActivity("ACT-HAND").setHandler(activity -> {
-            given().header(TOKEN, u.result().getAccount().getToken())
-                    .queryParam(SeasonRoute.PARAM_COUNTRY_ID, "1322")
-                    .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, activity.result().getString(ActivityRoute.PARAM_ID))
-                    .when().get(BASE_URL + "/current")
-                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
-
-            given().header(TOKEN, u.result().getAccount().getToken())
-                    .queryParam(SeasonRoute.PARAM_COUNTRY_ID, country.result().getString(CountryRoute.PARAM_ID))
-                    .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, "ACT-BIDON")
-                    .when().get(BASE_URL + "/current")
-                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
-            async.complete();
-        })));
-        async.await(TIMEOUT);
-    }
-
-    /**
      * Gets current season with missing parameter testBodyParams.
      */
     @Test

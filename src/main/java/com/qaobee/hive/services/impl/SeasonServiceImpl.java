@@ -58,15 +58,15 @@ public class SeasonServiceImpl implements SeasonService {
     }
 
     @Override
-    public void getCurrentSeason(String activityId, String countryId, Handler<AsyncResult<JsonObject>> resultHandler) {
+    public void getCurrentSeason(String activityId, Handler<AsyncResult<JsonObject>> resultHandler) {
         JsonObject criterias = new JsonObject()
                 .put(PARAM_ACTIVITY_ID, activityId)
-                .put(PARAM_COUNTRY_ID, countryId);
+                .put(PARAM_COUNTRY_ID, "CNTR-250-FR-FRA");
         mongo.findByCriterias(criterias, new CriteriaOption().withSort(END_DATE_FIELD).withOrder(-1), DBCollections.SEASON, resultJson -> {
             if (resultJson.succeeded()) {
                 long currentDate = System.currentTimeMillis();
                 if (resultJson.result().size() == 0) {
-                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, String.format(NO_SEASON_MESS, activityId, countryId))));
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, String.format(NO_SEASON_MESS, activityId, "CNTR-250-FR-FRA"))));
                 } else {
                     JsonObject season = null;
                     for (int i = 0; i < resultJson.result().size(); i++) {
@@ -78,7 +78,7 @@ public class SeasonServiceImpl implements SeasonService {
                     if (season != null) {
                         resultHandler.handle(Future.succeededFuture(season));
                     } else {
-                        resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, String.format(NO_SEASON_MESS, activityId, countryId))));
+                        resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, String.format(NO_SEASON_MESS, activityId, "CNTR-250-FR-FRA"))));
                     }
                 }
             } else {
@@ -88,14 +88,14 @@ public class SeasonServiceImpl implements SeasonService {
     }
 
     @Override
-    public void getListByActivity(String activityId, String countryId, Handler<AsyncResult<JsonArray>> resultHandler) {
+    public void getListByActivity(String activityId, Handler<AsyncResult<JsonArray>> resultHandler) {
         JsonObject criterias = new JsonObject()
                 .put(PARAM_ACTIVITY_ID, activityId)
-                .put(PARAM_COUNTRY_ID, countryId);
+                .put(PARAM_COUNTRY_ID, "CNTR-250-FR-FRA");
         mongo.findByCriterias(criterias, new CriteriaOption().withSort(END_DATE_FIELD).withOrder(-1), DBCollections.SEASON, resultJson -> {
             if (resultJson.succeeded()) {
                 if (resultJson.result().size() == 0) {
-                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, String.format(NO_SEASON_MESS, activityId, countryId))));
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, String.format(NO_SEASON_MESS, activityId, "CNTR-250-FR-FRA"))));
                 } else {
                     resultHandler.handle(Future.succeededFuture(resultJson.result()));
                 }

@@ -60,19 +60,17 @@ public interface SeasonService {
      * Gets current season.
      *
      * @param activityId    the activity id
-     * @param countryId     the country id
      * @param resultHandler the result handler
      */
-    void getCurrentSeason(String activityId, String countryId, Handler<AsyncResult<JsonObject>> resultHandler);
+    void getCurrentSeason(String activityId, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
      * Gets list by activity.
      *
      * @param activityId    the activity id
-     * @param countryId     the country id
      * @param resultHandler the result handler
      */
-    void getListByActivity(String activityId, String countryId, Handler<AsyncResult<JsonArray>> resultHandler);
+    void getListByActivity(String activityId, Handler<AsyncResult<JsonArray>> resultHandler);
 
     /**
      * Gets season.

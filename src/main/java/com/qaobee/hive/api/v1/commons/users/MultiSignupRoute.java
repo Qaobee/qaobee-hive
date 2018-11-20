@@ -66,9 +66,7 @@ public class MultiSignupRoute extends AbstractSignup {
      */
     private void registerMulti(RoutingContext context) {
         JsonObject userJson = context.getBodyAsJson().getJsonObject("user");
-        String country = userJson.getString("country");
-        userJson.remove("country");
-        signupService.register(userJson.getString(PARAM_CAPTCHA, ""), userJson, country, getLocale(context), u -> {
+        signupService.register(userJson.getString(PARAM_CAPTCHA, ""), userJson, getLocale(context), u -> {
             if (u.succeeded()) {
                 JsonObject user = u.result().getJsonObject("person");
                 JsonObject structure = context.getBodyAsJson().getJsonObject("structure");

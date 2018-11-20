@@ -303,7 +303,7 @@ public class UserServiceImpl implements UserService {
          sandBoxService.getSandboxById(sandboxId, sbRes -> {
             if (sbRes.succeeded()) {
                 JsonObject meta = sbRes.result();
-                seasonService.getCurrentSeason(meta.getString("activityId"), meta.getJsonObject("structure").getJsonObject("country").getString("_id"), season -> {
+                seasonService.getCurrentSeason(meta.getString("activityId"), season -> {
                     if (season.succeeded()) {
                         meta.put("season", season.result());
                         teamService.getTeamList(meta.getString("_id"), meta.getString("effectiveDefault"), "false", "true", null, teams -> {

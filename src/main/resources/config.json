@@ -185,7 +185,7 @@
       "mail.site.url.api": "#/signup/end",
       "mail.send": true,
       "mail.to": "contact@qaobee.com",
-      "mail.from": "Qaobee <contact@qaobee.com>",
+      "mail.from": "Qaobee <contact@qaobee.com>yarn dev",
       "newpasswd.site.url.api": "#/recoverpasswd",
       "pay.url.api": "#/private/profile/billing",
       "external.invitation.site.url.api": "#/externalInvitation",

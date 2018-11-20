@@ -80,10 +80,9 @@ public interface SignupService {
      * @param reCaptchaChallenge the re captcha challenge
      * @param user               the user
      * @param locale             the locale
-     * @param country            the country
      * @param resultHandler      the result handler
      */
-    void register(String reCaptchaChallenge, JsonObject user, String locale, String country, Handler<AsyncResult<JsonObject>> resultHandler);
+    void register(String reCaptchaChallenge, JsonObject user, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
      * Resend mail.

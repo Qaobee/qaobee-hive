@@ -80,7 +80,6 @@ public class SignupRoute extends AbstractRoute {
                 this::loginTest);
 
         addRoute(router, "/register", HttpMethod.PUT,
-                c -> mandatoryHandler.testBodyParams(c, PARAM_CAPTCHA, "country"),
                 this::registerUser);
 
         addRoute(router, "/accountcheck", HttpMethod.GET,
@@ -183,9 +182,7 @@ public class SignupRoute extends AbstractRoute {
      */
     private void registerUser(RoutingContext context) {
         JsonObject u = context.getBodyAsJson();
-        String country = u.getString("country");
-        u.remove("country");
-        signupService.register(context.getBodyAsJson().getString(PARAM_CAPTCHA), u, country, getLocale(context), handleResponse(context));
+        signupService.register(context.getBodyAsJson().getString(PARAM_CAPTCHA), u, getLocale(context), handleResponse(context));
     }
 
     /**
