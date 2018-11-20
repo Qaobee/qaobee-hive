@@ -66,6 +66,8 @@ public final class Messages {
      * @return the string
      */
     public static String getString(final String key, final String locale, final Object... params) {
+        Locale.setDefault(Locale.ENGLISH);
+        ResourceBundle.clearCache();
         try {
             if (params.length > 0) {
                 return MessageFormat.format(ResourceBundle.getBundle(BUNDLE_NAME, Locale.forLanguageTag(locale.split(",")[0].replaceAll("-", "_"))).getString(key), params);
