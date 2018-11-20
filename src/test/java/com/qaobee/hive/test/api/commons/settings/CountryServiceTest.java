@@ -106,7 +106,7 @@ public class CountryServiceTest extends VertxJunitSupport {
         given().queryParam(CountryRoute.PARAM_LOCAL, "fr")
                 .when().get(BASE_URL + "/getList")
                 .then().assertThat().statusCode(200)
-                .body("", hasSize(202));
+                .body("", hasSize(16));
 
         given().queryParam(CountryRoute.PARAM_LABEL, "//Fra")
                 .queryParam(CountryRoute.PARAM_LOCAL, "fr")
