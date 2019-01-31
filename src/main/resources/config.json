@@ -39,10 +39,13 @@
     },
     "mongo.db": {
       "host": "localhost",
-      "port": 27017,
+      "port": 27018,
       "maxPoolSize": 2,
       "keepAlive": true,
-      "db_name": "hive"
+      "db_name": "hive",
+      "username": "hive",
+
+      "password": "qaobee2016"
     },
     "mailchimp": {
       "env": "DEV",
@@ -183,7 +186,7 @@
       "mail.site.url.api": "#/signup/end",
       "mail.send": true,
       "mail.to": "contact@qaobee.com",
-      "mail.from": "Qaobee <contact@qaobee.com>yarn dev",
+      "mail.from": "Qaobee <contact@qaobee.com>",
       "newpasswd.site.url.api": "#/recoverpasswd",
       "pay.url.api": "#/private/profile/billing",
       "external.invitation.site.url.api": "#/externalInvitation",
